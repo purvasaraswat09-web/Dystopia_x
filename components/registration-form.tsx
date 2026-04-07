@@ -1,3 +1,5 @@
+"use client"
+
 import { db, storage } from "../firebase.js";
 import { collection, doc, setDoc, getDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
