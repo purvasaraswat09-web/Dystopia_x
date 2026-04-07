@@ -7,18 +7,17 @@ const details = [
     icon: Trophy,
     title: "Prize Pool",
     value: "₹2000",
-    description: "Winner takes ₹1000 ",
   },
   {
     icon: Calendar,
     title: "Date & Time",
-    value: "May 15, 2026",
-    description: "Registration closes May 10th, 11:59 PM",
+    value: "April 11, 2026",
+    description: "Registration closes April 8th, 11:59 PM",
   },
   {
     icon: Ticket,
     title: "Entry Fee",
-    value: "₹200/Squad",
+    value: "₹1/Squad",
     //description: "Early bird: ₹149 (ends May 1st)",
   },
 ]

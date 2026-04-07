@@ -38,8 +38,13 @@ export function Footer() {
           </div>
 
           {/* Organizer */}
-          <p className="text-muted-foreground text-sm mb-4">
+          <p className="text-muted-foreground text-sm">
             Organized by <span className="text-foreground font-medium">Distopia_x</span>
+          </p>
+
+          {/* Developers */}
+          <p className="text-muted-foreground text-xs mt-2 mb-6 tracking-wide uppercase font-mono">
+           Website developed by <span className="text-primary font-bold">Krish Singh, Vedant Varshney and Purva Saraswat</span>
           </p>
 
           {/* Links */}

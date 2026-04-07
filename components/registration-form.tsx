@@ -1,11 +1,10 @@
-"use client"
-import { db } from "../firebase.js";
+import { db, storage } from "../firebase.js";
 import { collection, doc, setDoc, getDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { useState } from "react"
-import { CheckCircle, Loader2, AlertCircle, ArrowLeft } from "lucide-react"
+import { CheckCircle, Loader2, AlertCircle, ArrowLeft, Camera, Upload } from "lucide-react"
 import Link from "next/link"
-import Script from "next/script"
 
 interface FormData {
   game: string
@@ -41,6 +40,9 @@ export function RegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [submitError, setSubmitError] = useState("")
+  const [screenshot, setScreenshot] = useState<File | null>(null)
+  const [uploadingScreenshot, setUploadingScreenshot] = useState(false)
+  const [screenshotUploaded, setScreenshotUploaded] = useState(false)
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -90,9 +92,26 @@ export function RegistrationForm() {
       const phoneSnap = await getDoc(phoneRef);
 
       if (phoneSnap.exists()) {
-        setSubmitError("⚠️ You already registered a squad with this number");
-        setIsSubmitting(false);
-        return;
+        const playerData = phoneSnap.data();
+        if (playerData.payment === "success") {
+          setSubmitError("⚠️ You already registered a squad with this number");
+          setIsSubmitting(false);
+          return;
+        } else {
+          // If pending or submitted, just show the payment screen again
+          setFormData({
+            game: playerData.game,
+            squadName: playerData.squadName,
+            captainId: playerData.captainId,
+            player2Id: playerData.player2Id,
+            player3Id: playerData.player3Id,
+            player4Id: playerData.player4Id,
+            phoneNumber: playerData.phoneNumber,
+          });
+          setIsSuccess(true);
+          setIsSubmitting(false);
+          return;
+        }
       }
 
       // 🔍 2. SQUAD NAME UNIQUENESS CHECK
@@ -133,67 +152,37 @@ export function RegistrationForm() {
     }
   };
 
-  const handlePayment = async () => {
+  const handleScreenshotUpload = async () => {
+    if (!screenshot) {
+      alert("Please select a screenshot first.");
+      return;
+    }
+
+    setUploadingScreenshot(true);
     try {
-      const res = await fetch("/api/create-razorpay-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: 100 }), // 1 INR in paise
+      const storageRef = ref(storage, `screenshots/${formData.phoneNumber}_${Date.now()}`);
+      await uploadBytes(storageRef, screenshot);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      const phoneRef = doc(db, "players", formData.phoneNumber);
+      await updateDoc(phoneRef, {
+        payment: "submitted",
+        screenshotUrl: downloadURL,
       });
-      const data = await res.json();
 
-      if (data.error) {
-        alert("Failed to initialize order.");
-        return;
-      }
-
-      const options = {
-        key: "rzp_test_SZu9r2VeGMvtxD",
-        amount: "100",
-        currency: "INR",
-        name: "Distopia_X Esports",
-        description: "Squad Registration Fee",
-        order_id: data.orderId,
-        handler: async function (response: any) {
-          const verifyRes = await fetch("/api/verify-razorpay-payment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            }),
-          });
-          const verifyData = await verifyRes.json();
-          if (verifyData.valid) {
-            // Update payment status in firebase
-            const phoneRef = doc(db, "players", formData.phoneNumber);
-            await updateDoc(phoneRef, {
-              payment: "success"
-            });
-            alert("Payment Successful! Your squad is locked in.");
-          } else {
-            alert("Payment Verification Failed!");
-          }
-        },
-        prefill: {
-          name: formData.squadName,
-          contact: formData.phoneNumber,
-        },
-        theme: {
-          color: "#e11d48", // match the red-600
-        },
-      };
-
-      const rzp1 = new (window as any).Razorpay(options);
-      rzp1.open();
+      setScreenshotUploaded(true);
+      alert("Screenshot submitted successfully! We will verify your payment soon.");
     } catch (error) {
-      console.error("Payment Error:", error);
-      alert("Failed to initialize payment. Please try again.");
+      console.error("Upload Error:", error);
+      alert("Failed to upload screenshot. Please try again.");
+    } finally {
+      setUploadingScreenshot(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setScreenshot(e.target.files[0]);
     }
   };
 
@@ -207,41 +196,97 @@ export function RegistrationForm() {
   }
 
   if (isSuccess) {
+    const upiUrl = `upi://pay?pa=krishsiingh444@pingpay&pn=Krish%20Singh&cu=INR&am=1`;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
+
     return (
       <section id="register" className="relative py-24 md:py-32 overflow-hidden noise-overlay">
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
         <div className="relative z-10 max-w-lg mx-auto px-4">
-          <div className="glass rounded-2xl p-8 md:p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-6">
-              <CheckCircle className="w-10 h-10 text-primary" />
-            </div>
-            <h3 className="font-mono text-2xl md:text-3xl font-bold mb-4">
-              ALMOST DONE
-            </h3>
-            <p className="text-muted-foreground mb-8">
-              Your {formData.game === "bgmi" ? "BGMI" : "Free Fire"} squad details have been saved. Pay the entry fee to secure your spot in Distopia_x.
-            </p>
-            <button
-              onClick={handlePayment}
-              className="w-full mt-2 mb-6 py-4 bg-green-600 hover:bg-green-700 transition-colors text-white font-bold rounded-lg text-center"
-            >
-              PAY ₹1 ENTRY FEE
-            </button>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 border-t border-border/50 pt-6 mt-4">
-              <button
-                onClick={() => setIsSuccess(false)}
-                className="text-primary font-mono tracking-wide hover:underline text-sm"
-              >
-                Register another squad
-              </button>
-              <Link
-                href="/"
-                className="text-muted-foreground font-mono tracking-wide hover:text-white transition-colors inline-flex items-center gap-2 text-sm"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Main Page
-              </Link>
+          <div className="glass rounded-2xl p-8 md:p-12 text-center border border-primary/30">
+            {!screenshotUploaded ? (
+              <>
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-6">
+                  <CheckCircle className="w-10 h-10 text-primary" />
+                </div>
+                <h3 className="font-mono text-2xl md:text-3xl font-bold mb-4">
+                  PAYMENT REQUIRED
+                </h3>
+                <p className="text-muted-foreground mb-8 text-sm">
+                  Scan the QR code below to pay <span className="text-primary font-bold">₹1 Entry Fee</span>. After payment, upload the screenshot to verify your registration.
+                </p>
+
+                <div className="bg-white p-4 rounded-xl inline-block mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={qrCodeUrl} alt="UPI QR Code" className="w-48 h-48 md:w-56 md:h-56" />
+                </div>
+
+                <div className="mb-8 p-4 bg-background/50 rounded-lg border border-border">
+                  <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider mb-2">UPI DETAILS</p>
+                  <p className="text-foreground font-bold">Krish Singh</p>
+                  <p className="text-primary font-mono text-sm uppercase tracking-tighter">krishsiingh444@pingpay</p>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block w-full cursor-pointer group">
+                    <div className="flex flex-col items-center justify-center py-6 px-4 border-2 border-dashed border-border group-hover:border-primary transition-colors rounded-xl bg-background/30">
+                      <Camera className="w-8 h-8 text-muted-foreground group-hover:text-primary mb-2 transition-colors" />
+                      <p className="text-sm text-muted-foreground group-hover:text-foreground">
+                        {screenshot ? screenshot.name : "Select Payment Screenshot"}
+                      </p>
+                      <input type="file" onChange={handleFileChange} accept="image/*" className="hidden" />
+                    </div>
+                  </label>
+
+                  <button
+                    onClick={handleScreenshotUpload}
+                    disabled={uploadingScreenshot || !screenshot}
+                    className={`w-full py-4 bg-primary hover:bg-primary/90 transition-all text-white font-bold rounded-xl flex items-center justify-center gap-2 ${uploadingScreenshot || !screenshot ? 'opacity-50 cursor-not-allowed' : 'shadow-[0_0_20px_rgba(255,0,0,0.3)]'}`}
+                  >
+                    {uploadingScreenshot ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        UPLOADING...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-5 h-5" />
+                        SUBMIT VERIFICATION
+                      </>
+                    )}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="py-8">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/20 mb-6">
+                  <CheckCircle className="w-10 h-10 text-green-500" />
+                </div>
+                <h3 className="font-mono text-2xl md:text-3xl font-bold mb-4 text-green-500">
+                  SUBMITTED!
+                </h3>
+                <p className="text-muted-foreground mb-8">
+                  Your payment proof has been received. Our team will verify it within 24 hours. Your squad is now in the queue.
+                </p>
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center w-full py-4 bg-background border border-border hover:border-primary transition-all text-foreground font-bold rounded-xl gap-2"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  Return Home
+                </Link>
+              </div>
+            )}
+
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 border-t border-border/50 pt-8 mt-8">
+              {!screenshotUploaded && (
+                <button
+                  onClick={() => setIsSuccess(false)}
+                  className="text-muted-foreground font-mono tracking-wide hover:text-white transition-colors text-xs"
+                >
+                  Change registration info
+                </button>
+              )}
             </div>
           </div>
         </div>

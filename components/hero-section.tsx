@@ -16,9 +16,8 @@ export function HeroSection() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [mounted, setMounted] = useState(false)
 
-  // Set tournament date - 30 days from now for demo
-  const targetDate = new Date()
-  targetDate.setDate(targetDate.getDate() + 30)
+  // Set tournament date - 11 April 2026
+  const targetDate = new Date("2026-04-11T10:00:00")
 
   useEffect(() => {
     setMounted(true)
