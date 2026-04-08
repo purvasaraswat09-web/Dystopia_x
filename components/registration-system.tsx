@@ -433,22 +433,28 @@ export function RegistrationSystem() {
 
           {status === "approved" && (
             <>
-              <div className="w-24 h-24 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+              <div className="w-24 h-24 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
-              <h2 className="text-4xl font-mono font-bold mb-4 italic uppercase text-green-500 tracking-tighter">SQUAD REGISTERED ✅</h2>
-              <p className="text-muted-foreground mb-8 leading-relaxed max-w-sm mx-auto">
-                Victory awaits! Your team is officially in the tournament. Instructions have been sent to your game account.
-              </p>
+              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-500 tracking-tighter">PAYMENT DONE ✅</h2>
+              <p className="text-green-400 font-mono text-sm uppercase tracking-widest mb-4 animate-pulse">Payment Verified Successfully!</p>
+              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-6 max-w-sm mx-auto">
+                <p className="text-white text-sm leading-relaxed">
+                  🎉 Your squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> is officially registered in the tournament!
+                </p>
+                <p className="text-muted-foreground text-xs mt-2">Instructions will be sent to your WhatsApp number.</p>
+              </div>
+              <p className="text-muted-foreground text-xs uppercase tracking-widest mb-6 font-mono">Want to register another squad?</p>
               <button
                 onClick={handleRegisterAnother}
-                className="w-full py-4 mb-6 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2"
+                className="w-full py-4 mb-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2 text-sm tracking-widest uppercase"
               >
                 <Trophy className="w-5 h-5" />
-                REGISTER ANOTHER SQUAD
+                Register Another Squad
               </button>
             </>
           )}
+
 
           {status === "rejected" && (
             <>
