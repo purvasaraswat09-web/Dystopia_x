@@ -15,7 +15,6 @@ interface TimeLeft {
 export function HeroSection() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [mounted, setMounted] = useState(false)
-  const [flipped, setFlipped] = useState(false)
 
   // Set tournament date - 11 April 2026
   const targetDate = new Date("2026-04-11T10:00:00")
@@ -116,46 +115,15 @@ export function HeroSection() {
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-20">
-          {/* CTA Button */}
-          <Link
-            href="/register"
-            className="group relative inline-flex items-center justify-center px-10 md:px-12 py-5 md:py-6 text-xl md:text-2xl font-bold font-mono tracking-widest bg-black border-2 border-primary text-white rounded-none overflow-hidden transition-all duration-300 hover:scale-[1.02] animate-pulse-glow"
-            style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
-          >
-            <span className="relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">REGISTER SQUAD</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-red-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </Link>
-
-          {/* Flip Button */}
-          <div 
-            className="relative w-full max-w-[300px] h-[70px] md:h-[80px] cursor-pointer group"
-            style={{ perspective: "1000px" }}
-            onClick={() => setFlipped(!flipped)}
-          >
-            <div 
-              className="w-full h-full transition-transform duration-700"
-              style={{ transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
-            >
-              {/* Front */}
-              <div 
-                className="absolute inset-0 bg-black/80 border-2 border-white/20 flex items-center justify-center backdrop-blur-sm transition-colors group-hover:border-white/50"
-                style={{ backfaceVisibility: "hidden", clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
-              >
-                <span className="font-mono text-xl md:text-2xl font-bold tracking-widest text-white">TOURNAMENT</span>
-              </div>
-              {/* Back */}
-              <div 
-                className="absolute inset-0 bg-primary/20 border-2 border-primary flex flex-col items-center justify-center backdrop-blur-md"
-                style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
-              >
-                <span className="font-mono text-sm md:text-base font-bold text-white tracking-widest uppercase mb-1">April 11, 2026</span>
-                <span className="font-mono text-[10px] md:text-[11px] text-primary font-bold tracking-[0.2em] uppercase text-center px-4">BGMI ESPORTS TOURNAMENT</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* CTA Button */}
+        <Link
+          href="/register"
+          className="group relative inline-flex items-center justify-center px-10 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold font-mono tracking-widest bg-black border-2 border-primary text-white rounded-none overflow-hidden transition-all duration-300 hover:scale-[1.02] animate-pulse-glow"
+          style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
+        >
+          <span className="relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">REGISTER SQUAD</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-red-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </Link>
       </div>
 
       {/* Scroll indicator */}

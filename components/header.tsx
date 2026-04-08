@@ -3,9 +3,12 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Trophy } from "lucide-react"
+import { useState } from "react"
 
 export function Header() {
   const pathname = usePathname()
+  const [tournamentFlipped, setTournamentFlipped] = useState(false)
+  const [activeTab, setActiveTab] = useState("home")
   const isRegisterPage = pathname === "/register"
 
   return (
@@ -21,13 +24,47 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-sm font-mono tracking-widest text-muted-foreground hover:text-white transition-colors">
+          <Link 
+            href="/" 
+            onClick={() => setActiveTab("home")}
+            className={`text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "home" ? "text-primary" : "text-muted-foreground hover:text-white"}`}
+          >
             HOME
           </Link>
-          <Link href="/#tournament" className="text-sm font-mono tracking-widest text-muted-foreground hover:text-white transition-colors">
-            TOURNAMENT
-          </Link>
-          <Link href="/#rules" className="text-sm font-mono tracking-widest text-muted-foreground hover:text-white transition-colors">
+          <div 
+            className={`relative cursor-pointer h-6 w-[120px] flex items-center justify-center text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "tournament" ? "text-primary" : "text-muted-foreground hover:text-white"}`}
+            onClick={() => {
+              setTournamentFlipped(!tournamentFlipped)
+              setActiveTab("tournament")
+            }}
+            style={{ perspective: "1000px" }}
+          >
+            <div 
+              className="absolute inset-0 w-full h-full transition-transform duration-500"
+              style={{ transformStyle: "preserve-3d", transform: tournamentFlipped ? "rotateX(180deg)" : "rotateX(0deg)" }}
+            >
+              {/* Front */}
+              <div 
+                className="absolute inset-0 w-full h-full flex items-center justify-center text-center"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                TOURNAMENT
+              </div>
+              {/* Back */}
+              <div 
+                className="absolute inset-0 w-[160px] -left-[20px] h-[36px] -top-[6px] flex flex-col items-center justify-center text-center"
+                style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
+              >
+                <span className="text-[11px] text-white font-bold tracking-widest leading-none">APRIL 11, 2026</span>
+                <span className="text-[9px] text-primary tracking-widest leading-none mt-[4px]">BGMI ESPORTS</span>
+              </div>
+            </div>
+          </div>
+          <Link 
+            href="/#rules" 
+            onClick={() => setActiveTab("rules")}
+            className={`text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "rules" ? "text-primary" : "text-muted-foreground hover:text-white"}`}
+          >
             RULES
           </Link>
         </nav>
