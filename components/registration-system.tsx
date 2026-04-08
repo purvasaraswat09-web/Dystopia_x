@@ -43,7 +43,7 @@ export function RegistrationSystem() {
   })
 
   const UPI_ID = "krishsiingh444@oksbi"
-  const AMOUNT = "50"
+  const AMOUNT = "200"
   const NAME = "Krish Singh"
   const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(NAME)}&am=${AMOUNT}&cu=INR`
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`
@@ -83,6 +83,24 @@ export function RegistrationSystem() {
   const copyUpiId = () => {
     navigator.clipboard.writeText(UPI_ID)
     toast.success("UPI ID Copied!")
+  }
+
+  const handleRegisterAnother = () => {
+    localStorage.removeItem("temp_phone")
+    setFormData({
+      name: "",
+      teamName: "",
+      phone: "",
+      gameUid: "",
+      player2Uid: "",
+      player3Uid: "",
+      player4Uid: "",
+      utrId: "",
+      payerName: "",
+    })
+    setStatus(null)
+    setStep("FORM")
+    toast.success("New registration started!")
   }
 
 
@@ -422,6 +440,13 @@ export function RegistrationSystem() {
               <p className="text-muted-foreground mb-8 leading-relaxed max-w-sm mx-auto">
                 Victory awaits! Your team is officially in the tournament. Instructions have been sent to your game account.
               </p>
+              <button
+                onClick={handleRegisterAnother}
+                className="w-full py-4 mb-6 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2"
+              >
+                <Trophy className="w-5 h-5" />
+                REGISTER ANOTHER SQUAD
+              </button>
             </>
           )}
 
