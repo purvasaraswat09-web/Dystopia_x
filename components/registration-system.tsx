@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { db, storage } from "@/firebase"
-import { collection, doc, setDoc, getDoc, query, where, getDocs } from "firebase/firestore"
+import { collection, doc, setDoc, getDoc, query, where, getDocs, onSnapshot } from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { CheckCircle, Loader2, AlertCircle, Copy, ExternalLink, Camera, Upload, Trophy, QrCode, Users } from "lucide-react"
 import { toast } from "sonner"
@@ -48,36 +48,41 @@ export function RegistrationSystem() {
   const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(NAME)}&am=${AMOUNT}&cu=INR`
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`
 
-  // Check existing registration on load
+  // Real-time listener — auto-updates when admin approves/rejects in Firebase
   useEffect(() => {
-    const checkStatus = async () => {
-      const savedPhone = localStorage.getItem("temp_phone")
+    const savedPhone = localStorage.getItem("temp_phone")
+    if (!savedPhone) return
 
-      if (savedPhone) {
-        setLoading(true)
-        try {
-          const docRef = doc(db, "registrations", savedPhone)
-          const docSnap = await getDoc(docRef)
-          
-          if (docSnap.exists()) {
-            const data = docSnap.data() as RegistrationData
-            setFormData(prev => ({ ...prev, ...data }))
-            
-            if (data.status === "pending_payment") {
-              setStep("PAYMENT")
-            } else {
-              setStatus(data.status)
-              setStep("STATUS")
-            }
+    setLoading(true)
+    const docRef = doc(db, "registrations", savedPhone)
+
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      setLoading(false)
+      if (docSnap.exists()) {
+        const data = docSnap.data() as RegistrationData
+        setFormData(prev => ({ ...prev, ...data }))
+
+        if (data.status === "pending_payment") {
+          setStep("PAYMENT")
+        } else {
+          setStatus(data.status)
+          setStep("STATUS")
+          // Show toast when admin approves
+          if (data.status === "approved") {
+            toast.success("🎉 Your payment is approved! Squad registered!")
+          } else if (data.status === "rejected") {
+            toast.error("Payment was rejected. Please try again.")
           }
-        } catch (error) {
-          console.error("Error fetching status:", error)
-        } finally {
-          setLoading(false)
         }
+      } else {
+        setLoading(false)
       }
-    }
-    checkStatus()
+    }, (error) => {
+      console.error("Realtime listener error:", error)
+      setLoading(false)
+    })
+
+    return () => unsubscribe()
   }, [])
 
   const copyUpiId = () => {
