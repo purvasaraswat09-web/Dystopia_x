@@ -17,9 +17,10 @@ interface RegistrationData {
   player2Uid: string
   player3Uid: string
   player4Uid: string
-  transactionId: string
+  utrId: string
+  payerName: string
   status: "pending_payment" | "pending" | "approved" | "rejected"
-  screenshotUrl: string
+  screenshotUrl?: string
   submittedAt: number
 }
 
@@ -27,7 +28,6 @@ export function RegistrationSystem() {
   const [step, setStep] = useState<Step>("FORM")
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<"pending" | "approved" | "rejected" | null>(null)
-  const [screenshot, setScreenshot] = useState<File | null>(null)
   const [formData, setFormData] = useState({
     name: "",
     teamName: "",
@@ -36,7 +36,8 @@ export function RegistrationSystem() {
     player2Uid: "",
     player3Uid: "",
     player4Uid: "",
-    transactionId: "",
+    utrId: "",
+    payerName: "",
   })
 
   const UPI_ID = "krishsiingh444@oksbi"
@@ -82,11 +83,6 @@ export function RegistrationSystem() {
     toast.success("UPI ID Copied!")
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setScreenshot(e.target.files[0])
-    }
-  }
 
   const handleInitialRegistration = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -137,33 +133,27 @@ export function RegistrationSystem() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!screenshot) return toast.error("Please upload payment screenshot")
-    if (!formData.transactionId) return toast.error("Transaction ID is required")
-    if (formData.transactionId.length < 6) return toast.error("Please enter a valid Transaction ID")
+    if (!formData.payerName) return toast.error("Payer Name is required")
+    if (!formData.utrId) return toast.error("UTR ID is required")
+    if (formData.utrId.length < 6) return toast.error("Please enter a valid UTR ID")
 
     setLoading(true)
     try {
-      // Check if Transaction ID is already used by another record
-      const q = query(collection(db, "registrations"), where("transactionId", "==", formData.transactionId))
+      // Check if UTR ID is already used by another record
+      const q = query(collection(db, "registrations"), where("utrId", "==", formData.utrId))
       const querySnapshot = await getDocs(q)
       
       const duplicate = querySnapshot.docs.find(doc => doc.id !== formData.phone)
       if (duplicate) {
-        toast.error("This Transaction ID has already been used!")
+        toast.error("This UTR ID has already been used!")
         setLoading(false)
         return
       }
-
-      // Upload Screenshot
-      const storageRef = ref(storage, `screenshots/${formData.phone}_${Date.now()}`)
-      await uploadBytes(storageRef, screenshot)
-      const downloadURL = await getDownloadURL(storageRef)
 
       // Update the record
       const docRef = doc(db, "registrations", formData.phone)
       await setDoc(docRef, {
         ...formData,
-        screenshotUrl: downloadURL,
         status: "pending",
         submittedAt: Date.now(),
       }, { merge: true })
@@ -353,34 +343,25 @@ export function RegistrationSystem() {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Transaction ID (UPI Ref No.)</label>
+              <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Payer Name</label>
               <input
                 required
-                className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 focus:border-primary outline-none transition-all font-mono text-center tracking-[0.2em]"
-                placeholder="Enter 12-digit number"
-                value={formData.transactionId}
-                onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
+                className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 focus:border-primary outline-none transition-all"
+                placeholder="Name of the person who paid"
+                value={formData.payerName}
+                onChange={(e) => setFormData({ ...formData, payerName: e.target.value })}
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-3">Upload Payment Proof (Screenshot)</label>
-              <label className="block cursor-pointer group">
-                <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border group-hover:border-primary/50 transition-all rounded-xl bg-background/30">
-                  {screenshot ? (
-                    <div className="flex items-center gap-3 text-primary animate-in zoom-in">
-                      <CheckCircle className="w-8 h-8" />
-                      <span className="text-sm font-bold truncate max-w-[200px]">{screenshot.name}</span>
-                    </div>
-                  ) : (
-                    <>
-                      <Camera className="w-10 h-10 text-muted-foreground mb-3 group-hover:scale-110 transition-transform" />
-                      <p className="text-sm text-muted-foreground">CLICK TO SELECT PHOTO</p>
-                    </>
-                  )}
-                  <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                </div>
-              </label>
+              <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">UTR ID / UPI Ref No.</label>
+              <input
+                required
+                className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 focus:border-primary outline-none transition-all font-mono text-center tracking-[0.2em]"
+                placeholder="12-digit UTR number"
+                value={formData.utrId}
+                onChange={(e) => setFormData({ ...formData, utrId: e.target.value })}
+              />
             </div>
 
             <button
@@ -412,7 +393,7 @@ export function RegistrationSystem() {
               </div>
               <h2 className="text-4xl font-mono font-bold mb-4 italic uppercase text-white tracking-tighter">WAITING FOR APPROVAL</h2>
               <p className="text-muted-foreground mb-8 leading-relaxed max-w-sm mx-auto">
-                Your squad registration is in the queue. Verification typically takes <span className="text-white font-bold">15-60 minutes</span>.
+                You get a msg on your whatsapp number thank you.
               </p>
             </>
           )}
@@ -453,8 +434,8 @@ export function RegistrationSystem() {
               <span className="text-sm font-bold text-white uppercase">{formData.teamName || "SQUAD"}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">Transaction Ref</span>
-              <span className="text-sm font-mono text-primary select-all">{formData.transactionId || localStorage.getItem("temp_phone") || "---"}</span>
+              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">UTR Ref</span>
+              <span className="text-sm font-mono text-primary select-all">{formData.utrId || localStorage.getItem("temp_phone") || "---"}</span>
             </div>
           </div>
         </div>

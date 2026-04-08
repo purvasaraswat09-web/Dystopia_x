@@ -15,7 +15,8 @@ interface RegistrationData {
   player2Uid: string
   player3Uid: string
   player4Uid: string
-  transactionId: string
+  utrId: string
+  payerName: string
   status: "pending_payment" | "pending" | "approved" | "rejected"
   screenshotUrl?: string
   submittedAt: number
@@ -72,7 +73,7 @@ export default function AdminDashboard() {
     (r) =>
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       r.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (r.transactionId && r.transactionId.includes(searchTerm)) ||
+      (r.utrId && r.utrId.includes(searchTerm)) ||
       r.phone.includes(searchTerm)
   )
 
@@ -175,9 +176,16 @@ export default function AdminDashboard() {
                       <p className="font-bold text-sm text-white truncate">{reg.name}</p>
                     </div>
                     <div className="space-y-1 text-right">
-                      <p className="text-[9px] text-muted-foreground uppercase font-mono tracking-widest">CONTACT</p>
-                      <a href={`https://wa.me/91${reg.phone}`} target="_blank" className="font-mono text-xs text-primary hover:underline flex items-center justify-end gap-1 font-bold">
-                        <Phone className="w-3 h-3" />
+                      <p className="text-[9px] text-muted-foreground uppercase font-mono tracking-widest">PAYER NAME</p>
+                      <p className="font-bold text-sm text-primary truncate">{reg.payerName || "SAME AS CPT"}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <p className="text-[9px] text-muted-foreground uppercase font-mono tracking-widest">WHATSAPP</p>
+                      <a href={`https://wa.me/91${reg.phone}`} target="_blank" className="font-mono text-xs text-white/80 hover:underline flex items-center gap-1 font-bold">
+                        <Phone className="w-3 h-3 text-primary" />
                         +91 {reg.phone}
                       </a>
                     </div>
@@ -209,9 +217,9 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-[9px] text-muted-foreground uppercase font-mono tracking-widest">UPI REF NUMBER</p>
+                    <p className="text-[9px] text-muted-foreground uppercase font-mono tracking-widest">UTR / UPI REF ID</p>
                     <p className="p-3 bg-primary/5 rounded-xl border border-primary/20 text-primary font-mono text-sm tracking-widest select-all">
-                      {reg.transactionId || "AWAITING PAYMENT"}
+                      {reg.utrId || "AWAITING PAYMENT"}
                     </p>
                   </div>
                   
