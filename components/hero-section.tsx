@@ -41,6 +41,9 @@ export function HeroSection() {
     return () => clearInterval(timer)
   }, [])
 
+  const scrollToRegister = () => {
+    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" })
+  }
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden noise-overlay scanline">
@@ -112,6 +115,20 @@ export function HeroSection() {
           ))}
         </div>
 
+        {/* CTA Button */}
+        <Link
+          href="/register"
+          className="group relative inline-flex items-center justify-center px-10 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold font-mono tracking-widest bg-black border-2 border-primary text-white rounded-none overflow-hidden transition-all duration-300 hover:scale-[1.02] animate-pulse-glow"
+          style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
+        >
+          <span className="relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">REGISTER SQUAD</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-red-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </Link>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10 cursor-pointer" onClick={scrollToRegister}>
+        <ChevronDown className="w-10 h-10 text-primary drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]" />
       </div>
     </section>
   )

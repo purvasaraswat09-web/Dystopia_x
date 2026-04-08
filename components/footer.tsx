@@ -52,6 +52,9 @@ export function Footer() {
             <a href="#details" className="hover:text-primary transition-colors">
               Details
             </a>
+            <a href="/register" className="hover:text-primary transition-colors">
+              Register
+            </a>
             <a href="#rules" className="hover:text-primary transition-colors">
               Rules
             </a>
