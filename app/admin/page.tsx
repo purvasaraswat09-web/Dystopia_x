@@ -16,8 +16,8 @@ interface RegistrationData {
   player3Uid: string
   player4Uid: string
   transactionId: string
-  status: "pending" | "approved" | "rejected"
-  screenshotUrl: string
+  status: "pending_payment" | "pending" | "approved" | "rejected"
+  screenshotUrl?: string
   submittedAt: number
 }
 
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
     (r) =>
       r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       r.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.transactionId.includes(searchTerm) ||
+      (r.transactionId && r.transactionId.includes(searchTerm)) ||
       r.phone.includes(searchTerm)
   )
 
@@ -144,15 +144,17 @@ export default function AdminDashboard() {
                 <div className="p-8 pb-4 border-b border-white/5 bg-white/5">
                   <div className="flex justify-between items-start mb-6">
                     <div className={`flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full border shadow-sm ${
+                      reg.status === 'pending_payment' ? 'bg-blue-500/10 text-blue-500 border-blue-500/30' :
                       reg.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30' :
                       reg.status === 'approved' ? 'bg-green-500/10 text-green-500 border-green-500/30' :
                       'bg-red-500/10 text-red-500 border-red-500/30'
                     }`}>
                       <span className={`w-2 h-2 rounded-full ${
+                        reg.status === 'pending_payment' ? 'bg-blue-500 animate-pulse' :
                         reg.status === 'pending' ? 'bg-yellow-500 animate-pulse' :
                         reg.status === 'approved' ? 'bg-green-500' : 'bg-red-500'
                       }`} />
-                      {reg.status}
+                      {reg.status.replace('_', ' ')}
                     </div>
                     <time className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest opacity-60">
                       {new Date(reg.submittedAt).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}
@@ -208,29 +210,38 @@ export default function AdminDashboard() {
 
                   <div className="space-y-1">
                     <p className="text-[9px] text-muted-foreground uppercase font-mono tracking-widest">UPI REF NUMBER</p>
-                    <p className="p-3 bg-primary/5 rounded-xl border border-primary/20 text-primary font-mono text-sm tracking-widest select-all">{reg.transactionId}</p>
+                    <p className="p-3 bg-primary/5 rounded-xl border border-primary/20 text-primary font-mono text-sm tracking-widest select-all">
+                      {reg.transactionId || "AWAITING PAYMENT"}
+                    </p>
                   </div>
                   
                   {/* Photo Preview */}
-                  <div className="relative group aspect-video rounded-2xl overflow-hidden cursor-pointer bg-black/40 border border-white/5" onClick={() => setSelectedImg(reg.screenshotUrl)}>
-                    <img src={reg.screenshotUrl} alt="Transaction Proof" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60 group-hover:opacity-100" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                       <div className="bg-primary/20 backdrop-blur-md p-2 rounded-lg border border-primary/30">
-                          <ImageIcon className="w-4 h-4 text-primary" />
-                       </div>
-                       <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">View Verification Proof</span>
+                  {reg.screenshotUrl ? (
+                    <div className="relative group aspect-video rounded-2xl overflow-hidden cursor-pointer bg-black/40 border border-white/5" onClick={() => setSelectedImg(reg.screenshotUrl!)}>
+                      <img src={reg.screenshotUrl} alt="Transaction Proof" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60 group-hover:opacity-100" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                         <div className="bg-primary/20 backdrop-blur-md p-2 rounded-lg border border-primary/30">
+                            <ImageIcon className="w-4 h-4 text-primary" />
+                         </div>
+                         <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">View Verification Proof</span>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="aspect-video rounded-2xl bg-black/20 border border-dashed border-white/10 flex flex-col items-center justify-center gap-2">
+                      <ImageIcon className="w-8 h-8 text-muted-foreground opacity-20" />
+                      <p className="text-[10px] font-mono uppercase text-muted-foreground tracking-widest">Photo TBD</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Footer Actions */}
                 <div className="p-8 pt-0 flex gap-4 mt-auto">
                   <button
                     onClick={() => handleStatusUpdate(reg.id, "approved")}
-                    disabled={reg.status === 'approved'}
+                    disabled={reg.status === 'approved' || reg.status === 'pending_payment'}
                     className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-xs tracking-widest transition-all ${
-                      reg.status === 'approved' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-green-600 hover:bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.3)] border-b-4 border-green-800 active:border-b-0 active:translate-y-1'
+                      (reg.status === 'approved' || reg.status === 'pending_payment') ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-green-600 hover:bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.3)] border-b-4 border-green-800 active:border-b-0 active:translate-y-1'
                     }`}
                   >
                     <CheckCircle className="w-4 h-4" />
@@ -238,9 +249,9 @@ export default function AdminDashboard() {
                   </button>
                   <button
                     onClick={() => handleStatusUpdate(reg.id, "rejected")}
-                    disabled={reg.status === 'rejected'}
+                    disabled={reg.status === 'rejected' || reg.status === 'pending_payment'}
                     className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-xs tracking-widest transition-all ${
-                      reg.status === 'rejected' ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-red-600 hover:bg-red-500 text-white shadow-[0_0_20px_rgba(220,38,38,0.3)] border-b-4 border-red-900 active:border-b-0 active:translate-y-1'
+                      (reg.status === 'rejected' || reg.status === 'pending_payment') ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-red-600 hover:bg-red-500 text-white shadow-[0_0_20px_rgba(220,38,38,0.3)] border-b-4 border-red-900 active:border-b-0 active:translate-y-1'
                     }`}
                   >
                     <XCircle className="w-4 h-4" />

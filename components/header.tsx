@@ -33,15 +33,7 @@ export function Header() {
         </nav>
 
         <div>
-          {!isRegisterPage ? (
-            <Link
-              href="/register"
-              className="relative inline-flex items-center justify-center px-6 py-2 text-sm font-bold font-mono tracking-widest bg-primary text-white rounded-none overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95"
-              style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
-            >
-              REGISTER NOW
-            </Link>
-          ) : (
+          {isRegisterPage && (
             <Link
               href="/"
               className="relative inline-flex items-center justify-center px-6 py-2 text-sm font-bold font-mono tracking-widest border border-primary text-primary hover:bg-primary hover:text-white rounded-none overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95"

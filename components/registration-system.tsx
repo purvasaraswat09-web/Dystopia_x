@@ -18,7 +18,7 @@ interface RegistrationData {
   player3Uid: string
   player4Uid: string
   transactionId: string
-  status: "pending" | "approved" | "rejected"
+  status: "pending_payment" | "pending" | "approved" | "rejected"
   screenshotUrl: string
   submittedAt: number
 }
@@ -48,17 +48,24 @@ export function RegistrationSystem() {
   // Check existing registration on load
   useEffect(() => {
     const checkStatus = async () => {
-      const savedTransId = localStorage.getItem("temp_transaction_id")
+      const savedPhone = localStorage.getItem("temp_phone")
 
-      if (savedTransId) {
+      if (savedPhone) {
         setLoading(true)
         try {
-          const q = query(collection(db, "registrations"), where("transactionId", "==", savedTransId))
-          const querySnapshot = await getDocs(q)
-          if (!querySnapshot.empty) {
-            const data = querySnapshot.docs[0].data() as RegistrationData
-            setStatus(data.status)
-            setStep("STATUS")
+          const docRef = doc(db, "registrations", savedPhone)
+          const docSnap = await getDoc(docRef)
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data() as RegistrationData
+            setFormData(prev => ({ ...prev, ...data }))
+            
+            if (data.status === "pending_payment") {
+              setStep("PAYMENT")
+            } else {
+              setStatus(data.status)
+              setStep("STATUS")
+            }
           }
         } catch (error) {
           console.error("Error fetching status:", error)
@@ -81,7 +88,7 @@ export function RegistrationSystem() {
     }
   }
 
-  const handleNextStep = (e: React.FormEvent) => {
+  const handleInitialRegistration = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.name || !formData.teamName || !formData.gameUid || !formData.phone) {
       toast.error("Please fill all mandatory details")
@@ -91,41 +98,79 @@ export function RegistrationSystem() {
       toast.error("Phone number must be 10 digits")
       return
     }
-    setStep("PAYMENT")
+
+    setLoading(true)
+    try {
+      // 1. Check if already registered
+      const docRef = doc(db, "registrations", formData.phone)
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        const data = docSnap.data() as RegistrationData
+        if (data.status !== "pending_payment") {
+          localStorage.setItem("temp_phone", formData.phone)
+          setStatus(data.status)
+          setStep("STATUS")
+          setLoading(false)
+          return
+        }
+      }
+
+      // 2. Save initial details
+      const regData: Partial<RegistrationData> = {
+        ...formData,
+        status: "pending_payment",
+        submittedAt: Date.now(),
+      }
+
+      await setDoc(docRef, regData)
+      localStorage.setItem("temp_phone", formData.phone)
+      setStep("PAYMENT")
+      toast.success("Squad Details Saved! Proceed to Payment.")
+    } catch (error) {
+      console.error("Registration Error:", error)
+      toast.error("Failed to save details. Try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!screenshot) return toast.error("Please upload payment screenshot")
     if (!formData.transactionId) return toast.error("Transaction ID is required")
+    if (formData.transactionId.length < 6) return toast.error("Please enter a valid Transaction ID")
 
     setLoading(true)
     try {
+      // Check if Transaction ID is already used by another record
       const q = query(collection(db, "registrations"), where("transactionId", "==", formData.transactionId))
       const querySnapshot = await getDocs(q)
-      if (!querySnapshot.empty) {
+      
+      const duplicate = querySnapshot.docs.find(doc => doc.id !== formData.phone)
+      if (duplicate) {
         toast.error("This Transaction ID has already been used!")
         setLoading(false)
         return
       }
 
-      const storageRef = ref(storage, `screenshots/${formData.transactionId}_${Date.now()}`)
+      // Upload Screenshot
+      const storageRef = ref(storage, `screenshots/${formData.phone}_${Date.now()}`)
       await uploadBytes(storageRef, screenshot)
       const downloadURL = await getDownloadURL(storageRef)
 
-      const regData: RegistrationData = {
+      // Update the record
+      const docRef = doc(db, "registrations", formData.phone)
+      await setDoc(docRef, {
         ...formData,
         screenshotUrl: downloadURL,
         status: "pending",
         submittedAt: Date.now(),
-      }
-
-      await setDoc(doc(db, "registrations", formData.transactionId), regData)
+      }, { merge: true })
       
-      localStorage.setItem("temp_transaction_id", formData.transactionId)
       setStatus("pending")
       setStep("STATUS")
-      toast.success("Registration submitted successfully!")
+      toast.success("Payment submitted! Verification in progress.")
     } catch (error) {
       console.error("Submission Error:", error)
       toast.error("Failed to submit. Please try again.")
@@ -170,7 +215,7 @@ export function RegistrationSystem() {
       </div>
 
       {step === "FORM" && (
-        <form onSubmit={handleNextStep} className="glass rounded-2xl p-8 border border-primary/20 animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
+        <form onSubmit={handleInitialRegistration} className="glass rounded-2xl p-8 border border-primary/20 animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
           <div className="text-center mb-8">
             <Users className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="text-3xl font-mono font-bold mb-2 uppercase italic text-white drop-shadow-[0_0_8px_rgba(255,0,60,0.5)]">SQUAD REGISTRATION</h2>
@@ -409,7 +454,7 @@ export function RegistrationSystem() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">Transaction Ref</span>
-              <span className="text-sm font-mono text-primary select-all">{localStorage.getItem("temp_transaction_id") || "---"}</span>
+              <span className="text-sm font-mono text-primary select-all">{formData.transactionId || localStorage.getItem("temp_phone") || "---"}</span>
             </div>
           </div>
         </div>
