@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { db, storage } from "@/firebase"
 import { collection, doc, setDoc, getDoc, query, where, getDocs } from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
@@ -25,6 +26,7 @@ interface RegistrationData {
 }
 
 export function RegistrationSystem() {
+  const router = useRouter()
   const [step, setStep] = useState<Step>("FORM")
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<"pending" | "approved" | "rejected" | null>(null)
@@ -168,6 +170,16 @@ export function RegistrationSystem() {
       setLoading(false)
     }
   }
+
+  // Handle auto-redirect after successful submission
+  useEffect(() => {
+    if (step === "STATUS" && status === "pending") {
+      const timer = setTimeout(() => {
+        router.push("/")
+      }, 10000)
+      return () => clearTimeout(timer)
+    }
+  }, [step, status, router])
 
   if (loading && step !== "STATUS") {
     return (
@@ -392,8 +404,11 @@ export function RegistrationSystem() {
                 <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
               </div>
               <h2 className="text-4xl font-mono font-bold mb-4 italic uppercase text-white tracking-tighter">WAITING FOR APPROVAL</h2>
-              <p className="text-muted-foreground mb-8 leading-relaxed max-w-sm mx-auto">
+              <p className="text-muted-foreground mb-4 leading-relaxed max-w-sm mx-auto">
                 You get a msg on your whatsapp number thank you.
+              </p>
+              <p className="text-[10px] text-primary font-mono uppercase tracking-widest animate-pulse mb-8">
+                Redirecting to home in 10 seconds...
               </p>
             </>
           )}
