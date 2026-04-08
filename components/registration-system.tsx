@@ -418,15 +418,41 @@ export function RegistrationSystem() {
         <div className="glass rounded-2xl p-12 border border-primary/20 text-center animate-in zoom-in duration-500">
           {status === "pending" && (
             <>
-              <div className="w-24 h-24 rounded-full bg-yellow-500/10 border-2 border-dashed border-yellow-500/50 flex items-center justify-center mx-auto mb-8 animate-spin-slow">
-                <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+              {/* Payment Success Banner */}
+              <div className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+                <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
-              <h2 className="text-4xl font-mono font-bold mb-4 italic uppercase text-white tracking-tighter">WAITING FOR APPROVAL</h2>
-              <p className="text-muted-foreground mb-4 leading-relaxed max-w-sm mx-auto">
-                You get a msg on your whatsapp number thank you.
+              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
+                PAYMENT DONE ✅
+              </h2>
+              <p className="text-green-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
+                Payment Submitted Successfully!
               </p>
-              <p className="text-[10px] text-primary font-mono uppercase tracking-widest animate-pulse mb-8">
+
+              {/* Squad confirmation card */}
+              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
+                <p className="text-white text-sm leading-relaxed mb-1">
+                  🎉 Squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> registration received!
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  You will receive confirmation on your WhatsApp once payment is verified by admin.
+                </p>
+              </div>
+
+              <p className="text-[10px] text-primary font-mono uppercase tracking-widest animate-pulse mb-6">
                 Redirecting to home in 10 seconds...
+              </p>
+
+              {/* Register Another Squad Button */}
+              <button
+                onClick={handleRegisterAnother}
+                className="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2 uppercase tracking-widest text-sm mb-2"
+              >
+                <Trophy className="w-5 h-5" />
+                Register Another Squad
+              </button>
+              <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
+                Use a different squad name &amp; mobile number
               </p>
             </>
           )}
