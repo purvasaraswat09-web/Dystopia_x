@@ -3,13 +3,35 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Trophy } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function Header() {
   const pathname = usePathname()
   const [tournamentFlipped, setTournamentFlipped] = useState(false)
   const [activeTab, setActiveTab] = useState("home")
   const isRegisterPage = pathname === "/register"
+
+  useEffect(() => {
+    if (isRegisterPage) return
+    const handleScroll = () => {
+      const rulesSection = document.getElementById("rules")
+      const detailsSection = document.getElementById("details")
+      let currentTab = "home"
+      
+      if (detailsSection && detailsSection.getBoundingClientRect().top <= 400) {
+        // Between details and rules
+        currentTab = "home" 
+      }
+      if (rulesSection && rulesSection.getBoundingClientRect().top <= 400) {
+        currentTab = "rules"
+      }
+      setActiveTab(currentTab)
+    }
+    
+    window.addEventListener("scroll", handleScroll)
+    handleScroll()
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [isRegisterPage])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-primary/10 bg-background/80 backdrop-blur-md">
@@ -26,17 +48,13 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link 
             href="/" 
-            onClick={() => setActiveTab("home")}
-            className={`text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "home" ? "text-primary" : "text-muted-foreground hover:text-white"}`}
+            className={`text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "home" ? "text-primary text-shadow-sm" : "text-muted-foreground hover:text-white"}`}
           >
             HOME
           </Link>
           <div 
-            className={`relative cursor-pointer h-6 w-[120px] flex items-center justify-center text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "tournament" ? "text-primary" : "text-muted-foreground hover:text-white"}`}
-            onClick={() => {
-              setTournamentFlipped(!tournamentFlipped)
-              setActiveTab("tournament")
-            }}
+            className={`relative cursor-pointer h-6 w-[120px] flex items-center justify-center text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && tournamentFlipped ? "text-primary text-shadow-sm" : "text-muted-foreground hover:text-white"}`}
+            onClick={() => setTournamentFlipped(!tournamentFlipped)}
             style={{ perspective: "1000px" }}
           >
             <div 
@@ -62,8 +80,7 @@ export function Header() {
           </div>
           <Link 
             href="/#rules" 
-            onClick={() => setActiveTab("rules")}
-            className={`text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "rules" ? "text-primary" : "text-muted-foreground hover:text-white"}`}
+            className={`text-sm font-mono tracking-widest transition-colors ${!isRegisterPage && activeTab === "rules" ? "text-primary text-shadow-sm" : "text-muted-foreground hover:text-white"}`}
           >
             RULES
           </Link>
