@@ -50,7 +50,7 @@ export function RegistrationSystem() {
     player3Uid: "",
     player4Uid: "",
     utrId: "",
-    playerName: "",
+    payerName: "",
   })
 
   const UPI_ID = "krishsiingh444@oksbi"
@@ -441,10 +441,10 @@ export function RegistrationSystem() {
                 <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
               </div>
               <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-white tracking-tighter">
-                PAYMENT SUBMITTED ✅
+                WAITING FOR APPROVAL ⏳
               </h2>
               <p className="text-yellow-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
-                Waiting for Admin Approval...
+                Admin is verifying your transaction...
               </p>
               <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
                 <p className="text-white text-sm leading-relaxed mb-1">
