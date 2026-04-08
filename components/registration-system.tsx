@@ -50,7 +50,7 @@ export function RegistrationSystem() {
     player3Uid: "",
     player4Uid: "",
     utrId: "",
-    payerName: "",
+    playerName: "",
   })
 
   const UPI_ID = "krishsiingh444@oksbi"
@@ -122,7 +122,7 @@ export function RegistrationSystem() {
 
   const handleInitialRegistration = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.name || !formData.teamName || !formData.gameUid || !formData.phone) {
+    if (!formData.name || !formData.teamName || !formData.gameUid || !formData.player2Uid || !formData.player3Uid || !formData.player4Uid || !formData.phone) {
       toast.error("Please fill all mandatory details")
       return
     }
@@ -130,6 +130,12 @@ export function RegistrationSystem() {
       toast.error("Phone number must be 10 digits")
       return
     }
+
+    const uidRegex = /^\d{9,11}$/;
+    if (!uidRegex.test(formData.gameUid)) return toast.error("Captain Game ID must be 9 to 11 digits")
+    if (!uidRegex.test(formData.player2Uid)) return toast.error("Player 2 Game ID must be 9 to 11 digits")
+    if (!uidRegex.test(formData.player3Uid)) return toast.error("Player 3 Game ID must be 9 to 11 digits")
+    if (!uidRegex.test(formData.player4Uid)) return toast.error("Player 4 Game ID must be 9 to 11 digits")
 
     setLoading(true)
     try {
@@ -171,7 +177,7 @@ export function RegistrationSystem() {
     e.preventDefault()
     if (!formData.payerName) return toast.error("Payer Name is required")
     if (!formData.utrId) return toast.error("UTR ID is required")
-    if (formData.utrId.length < 6) return toast.error("Please enter a valid UTR ID")
+    if (formData.utrId.length !== 12 || !/^\d{12}$/.test(formData.utrId)) return toast.error("UTR ID must be exactly 12 digits")
 
     setLoading(true)
     try {
@@ -205,15 +211,7 @@ export function RegistrationSystem() {
     }
   }
 
-  // Handle auto-redirect after successful submission
-  useEffect(() => {
-    if (step === "STATUS" && status === "pending") {
-      const timer = setTimeout(() => {
-        router.push("/")
-      }, 10000)
-      return () => clearTimeout(timer)
-    }
-  }, [step, status, router])
+
 
   if (loading && step !== "STATUS") {
     return (
@@ -294,46 +292,50 @@ export function RegistrationSystem() {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Captain Game UID</label>
+                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Captain Game ID</label>
                 <input
                   required
+                  maxLength={11}
                   className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all"
-                  placeholder="Captain ID"
+                  placeholder="9-11 digit Game ID"
                   value={formData.gameUid}
-                  onChange={(e) => setFormData({ ...formData, gameUid: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, gameUid: e.target.value.replace(/\D/g, '') })}
                 />
               </div>
             </div>
 
             <div className="space-y-5">
               <div>
-                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 2 Game UID</label>
+                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 2 Game ID</label>
                 <input
                   required
+                  maxLength={11}
                   className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all text-primary/80"
-                  placeholder="P2 UID"
+                  placeholder="9-11 digit Game ID"
                   value={formData.player2Uid}
-                  onChange={(e) => setFormData({ ...formData, player2Uid: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, player2Uid: e.target.value.replace(/\D/g, '') })}
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 3 Game UID</label>
+                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 3 Game ID</label>
                 <input
                   required
+                  maxLength={11}
                   className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all text-primary/80"
-                  placeholder="P3 UID"
+                  placeholder="9-11 digit Game ID"
                   value={formData.player3Uid}
-                  onChange={(e) => setFormData({ ...formData, player3Uid: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, player3Uid: e.target.value.replace(/\D/g, '') })}
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 4 Game UID</label>
+                <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 4 Game ID</label>
                 <input
                   required
+                  maxLength={11}
                   className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all text-primary/80"
-                  placeholder="P4 UID"
+                  placeholder="9-11 digit Game ID"
                   value={formData.player4Uid}
-                  onChange={(e) => setFormData({ ...formData, player4Uid: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, player4Uid: e.target.value.replace(/\D/g, '') })}
                 />
               </div>
             </div>
@@ -403,10 +405,11 @@ export function RegistrationSystem() {
               <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">UTR ID / UPI Ref No.</label>
               <input
                 required
+                maxLength={12}
                 className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 focus:border-primary outline-none transition-all font-mono text-center tracking-[0.2em]"
                 placeholder="12-digit UTR number"
                 value={formData.utrId}
-                onChange={(e) => setFormData({ ...formData, utrId: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, utrId: e.target.value.replace(/\D/g, '') })}
               />
             </div>
 
@@ -434,36 +437,24 @@ export function RegistrationSystem() {
         <div className="glass rounded-2xl p-12 border border-primary/20 text-center animate-in zoom-in duration-500">
           {(status === "pending" || (!status && formData.status === "pending")) && (
             <>
-              <div className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-                <CheckCircle className="w-12 h-12 text-green-500" />
+              <div className="w-24 h-24 rounded-full bg-yellow-500/10 border-2 border-dashed border-yellow-500/50 flex items-center justify-center mx-auto mb-6">
+                <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
               </div>
-              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
-                PAYMENT DONE ✅
+              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-white tracking-tighter">
+                PAYMENT SUBMITTED ✅
               </h2>
-              <p className="text-green-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
-                Payment Submitted Successfully!
+              <p className="text-yellow-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
+                Waiting for Admin Approval...
               </p>
-              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
                 <p className="text-white text-sm leading-relaxed mb-1">
-                  🎉 Squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> registration received!
+                  🎉 Squad <span className="text-yellow-400 font-bold uppercase">{formData.teamName}</span> — UTR submitted!
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  You will receive confirmation on your WhatsApp once payment is verified by admin.
+                  Once admin verifies your payment, you will receive a WhatsApp confirmation. You can then register another squad.
                 </p>
               </div>
-              <p className="text-[10px] text-primary font-mono uppercase tracking-widest animate-pulse mb-6">
-                Redirecting to home in 10 seconds...
-              </p>
-              <button
-                onClick={handleRegisterAnother}
-                className="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2 uppercase tracking-widest text-sm mb-2"
-              >
-                <Trophy className="w-5 h-5" />
-                Register Another Squad
-              </button>
-              <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
-                Use a different squad name &amp; mobile number
-              </p>
+
             </>
           )}
 
