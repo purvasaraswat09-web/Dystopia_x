@@ -30,7 +30,18 @@ export function RegistrationSystem() {
   const [step, setStep] = useState<Step>("FORM")
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<"pending" | "approved" | "rejected" | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string
+    teamName: string
+    phone: string
+    gameUid: string
+    player2Uid: string
+    player3Uid: string
+    player4Uid: string
+    utrId: string
+    payerName: string
+    status?: string
+  }>({
     name: "",
     teamName: "",
     phone: "",
@@ -421,9 +432,8 @@ export function RegistrationSystem() {
 
       {step === "STATUS" && (
         <div className="glass rounded-2xl p-12 border border-primary/20 text-center animate-in zoom-in duration-500">
-          {status === "pending" && (
+          {(status === "pending" || (!status && formData.status === "pending")) && (
             <>
-              {/* Payment Success Banner */}
               <div className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
@@ -433,8 +443,6 @@ export function RegistrationSystem() {
               <p className="text-green-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
                 Payment Submitted Successfully!
               </p>
-
-              {/* Squad confirmation card */}
               <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
                 <p className="text-white text-sm leading-relaxed mb-1">
                   🎉 Squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> registration received!
@@ -443,12 +451,9 @@ export function RegistrationSystem() {
                   You will receive confirmation on your WhatsApp once payment is verified by admin.
                 </p>
               </div>
-
               <p className="text-[10px] text-primary font-mono uppercase tracking-widest animate-pulse mb-6">
                 Redirecting to home in 10 seconds...
               </p>
-
-              {/* Register Another Squad Button */}
               <button
                 onClick={handleRegisterAnother}
                 className="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2 uppercase tracking-widest text-sm mb-2"
@@ -462,32 +467,45 @@ export function RegistrationSystem() {
             </>
           )}
 
-          {status === "approved" && (
+          {(status === "approved" || (!status && formData.status === "approved")) && (
             <>
-              <div className="w-24 h-24 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+              <div className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(34,197,94,0.6)]">
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
-              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-500 tracking-tighter">PAYMENT DONE ✅</h2>
-              <p className="text-green-400 font-mono text-sm uppercase tracking-widest mb-4 animate-pulse">Payment Verified Successfully!</p>
-              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-6 max-w-sm mx-auto">
-                <p className="text-white text-sm leading-relaxed">
-                  🎉 Your squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> is officially registered in the tournament!
+              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
+                TRANSACTION DONE ✅
+              </h2>
+              <p className="text-green-400 font-mono text-sm uppercase tracking-widest mb-2 animate-pulse">
+                Payment Done Successfully!
+              </p>
+              <p className="text-green-500/70 font-mono text-xs uppercase tracking-widest mb-6">
+                Your registration is confirmed in our system
+              </p>
+              <div className="bg-green-500/10 border border-green-500/40 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
+                <p className="text-white text-sm leading-relaxed mb-2">
+                  🎉 Squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> is officially registered in the tournament!
                 </p>
-                <p className="text-muted-foreground text-xs mt-2">Instructions will be sent to your WhatsApp number.</p>
+                <p className="text-muted-foreground text-xs">
+                  Room ID &amp; Password will be sent to your WhatsApp number before the match.
+                </p>
               </div>
-              <p className="text-muted-foreground text-xs uppercase tracking-widest mb-6 font-mono">Want to register another squad?</p>
+              <p className="text-muted-foreground text-xs uppercase tracking-widest mb-5 font-mono">
+                ── Want to register another squad? ──
+              </p>
               <button
                 onClick={handleRegisterAnother}
-                className="w-full py-4 mb-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.4)] transition-all border border-primary/50 flex items-center justify-center gap-2 text-sm tracking-widest uppercase"
+                className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_25px_rgba(255,0,60,0.5)] transition-all border border-primary/50 flex items-center justify-center gap-3 text-base tracking-widest uppercase mb-2 active:scale-95"
               >
-                <Trophy className="w-5 h-5" />
+                <Trophy className="w-6 h-6" />
                 Register Another Squad
               </button>
+              <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
+                Enter a new squad name &amp; different mobile number
+              </p>
             </>
           )}
 
-
-          {status === "rejected" && (
+          {(status === "rejected" || (!status && formData.status === "rejected")) && (
             <>
               <div className="w-24 h-24 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center mx-auto mb-8">
                 <AlertCircle className="w-12 h-12 text-red-500" />
@@ -497,7 +515,7 @@ export function RegistrationSystem() {
                 Transaction proof was invalid or rejected. Please check your data and try again.
               </p>
               <button
-                onClick={() => setStep("FORM")}
+                onClick={handleRegisterAnother}
                 className="w-full py-4 bg-primary text-white font-bold rounded-xl"
               >
                 RE-REGISTER SQUAD
@@ -505,14 +523,14 @@ export function RegistrationSystem() {
             </>
           )}
 
-          <div className="p-6 bg-muted/20 rounded-2xl border border-border inline-block w-full">
+          <div className="p-6 bg-muted/20 rounded-2xl border border-border inline-block w-full mt-6">
             <div className="flex justify-between items-center mb-4 border-b border-border pb-4">
               <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">Team Name</span>
               <span className="text-sm font-bold text-white uppercase">{formData.teamName || "SQUAD"}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">UTR Ref</span>
-              <span className="text-sm font-mono text-primary select-all">{formData.utrId || localStorage.getItem("temp_phone") || "---"}</span>
+              <span className="text-sm font-mono text-primary select-all">{formData.utrId || "---"}</span>
             </div>
           </div>
         </div>
