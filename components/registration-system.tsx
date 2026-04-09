@@ -202,7 +202,7 @@ export function RegistrationSystem() {
       
       setStatus("pending")
       setStep("STATUS")
-      toast.success("Your payment is done successfully! Register another squad or wait for approval.")
+      toast.success("Payment submitted! Verification in progress.")
     } catch (error) {
       console.error("Submission Error:", error)
       toast.error("Failed to submit. Please try again.")
@@ -437,37 +437,23 @@ export function RegistrationSystem() {
         <div className="glass rounded-2xl p-12 border border-primary/20 text-center animate-in zoom-in duration-500">
           {(status === "pending" || (!status && formData.status === "pending")) && (
             <>
-              <div className="w-24 h-24 rounded-full bg-green-500/10 border-2 border-dashed border-green-500/50 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="w-12 h-12 text-green-500 animate-pulse" />
+              <div className="w-24 h-24 rounded-full bg-yellow-500/10 border-2 border-dashed border-yellow-500/50 flex items-center justify-center mx-auto mb-6">
+                <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
               </div>
               <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-white tracking-tighter">
-                PAYMENT DONE SUCCESSFULLY ✅
+                WAITING FOR APPROVAL ⏳
               </h2>
-              <p className="text-green-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
-                Your payment is done successfully! Admin is verifying...
+              <p className="text-yellow-400 font-mono text-xs uppercase tracking-widest mb-6 animate-pulse">
+                Admin is verifying your transaction...
               </p>
-              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
                 <p className="text-white text-sm leading-relaxed mb-1">
-                  🎉 Squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> — UTR submitted!
+                  🎉 Squad <span className="text-yellow-400 font-bold uppercase">{formData.teamName}</span> — UTR submitted!
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  Once admin verifies your payment, you will receive a WhatsApp confirmation. You can now register another squad while you wait.
+                  Once admin verifies your payment, you will receive a WhatsApp confirmation. You can then register another squad.
                 </p>
               </div>
-
-              <p className="text-muted-foreground text-xs uppercase tracking-widest mb-5 font-mono">
-                ── Want to register another squad? ──
-              </p>
-              <button
-                onClick={handleRegisterAnother}
-                className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_25px_rgba(255,0,60,0.5)] transition-all border border-primary/50 flex items-center justify-center gap-3 text-base tracking-widest uppercase mb-2 active:scale-95"
-              >
-                <Trophy className="w-6 h-6" />
-                Register Another Squad
-              </button>
-              <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
-                Enter a new squad name & different mobile number
-              </p>
             </>
           )}
 
@@ -477,7 +463,7 @@ export function RegistrationSystem() {
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
               <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
-                TRANSACTION SUCCESSFUL ✅
+                YOUR PAYMENT IS DONE SUCCESSFULLY ✅
               </h2>
               <p className="text-green-400 font-mono text-sm uppercase tracking-widest mb-2 animate-pulse">
                 Transaction is done successfully!
