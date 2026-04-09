@@ -463,12 +463,12 @@ export function RegistrationSystem() {
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
               
-              <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
-                ✅ Payment Successful
+              <h2 className="text-4xl font-mono font-bold mb-4 italic uppercase text-green-400 tracking-tighter">
+                ✅ Transaction Successful
               </h2>
               
               <div className="space-y-2">
-                <p className="text-white text-lg font-medium">Your payment has been successfully verified.</p>
+                <p className="text-white text-xl font-bold animate-pulse">Your transaction is done successfully!</p>
                 <p className="text-muted-foreground">Your squad is now registered for the battle 🎮</p>
               </div>
               
