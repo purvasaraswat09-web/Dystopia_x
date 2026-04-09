@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Trophy, Calendar, Ticket, Swords, Skull } from "lucide-react"
 
 const details = [
@@ -22,7 +23,49 @@ const details = [
   },
 ]
 
+const progressionSteps = [
+  {
+    id: "qualifiers",
+    title: "QUALIFIERS",
+    icon: Swords,
+    secondaryText: "TOP 10 → SEMI",
+    map: "Erangel",
+    teams: "25 Teams",
+    highlight: false,
+  },
+  {
+    id: "semi-finals",
+    title: "SEMI FINAL",
+    icon: Skull,
+    secondaryText: "TOP 4 → FINAL",
+    map: "Sanhok",
+    teams: "10 Teams",
+    highlight: true,
+  },
+  {
+    id: "grand-finals",
+    title: "GRAND FINAL",
+    icon: Trophy,
+    secondaryText: "ULTIMATE CHAMPION",
+    map: "Livik",
+    teams: "4 Teams",
+    highlight: false,
+    trophyIcon: true,
+  },
+]
+
 export function TournamentDetails() {
+  const [flippedIndex, setFlippedIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (flippedIndex !== null) {
+      const timer = setTimeout(() => {
+        setFlippedIndex(null)
+      }, 15000)
+      return () => clearTimeout(timer)
+    }
+  }, [flippedIndex])
+
   return (
     <section id="details" className="relative py-24 md:py-32 overflow-hidden noise-overlay">
       {/* Background */}
@@ -84,86 +127,59 @@ export function TournamentDetails() {
             <div className="absolute hidden md:block top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-primary/10 via-primary to-primary/10 -translate-y-1/2 z-0" />
             <div className="absolute md:hidden left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/10 via-primary to-primary/10 -translate-x-1/2 z-0" />
 
-            {/* Step 1: Qualifiers */}
-            <div className="group glass relative z-10 w-full md:w-1/3 flex flex-col items-center text-center p-8 rounded-xl border border-primary/20 glow-border bg-background/90 backdrop-blur-xl">
-              <div className="w-16 h-16 rounded-full bg-background border-2 border-primary flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(255,0,0,0.3)] group-hover:scale-110 transition-transform">
-                <Swords className="w-8 h-8 text-primary group-hover:text-red-500 transition-colors" />
-              </div>
-              
-              <div className="relative mb-4 flex flex-col items-center">
-                <h4 className="font-mono text-2xl font-bold cursor-help border-b border-dashed border-primary/50 pb-1">QUALIFIERS</h4>
-                
-                {/* Dropdown / Tooltip */}
-                <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-64 p-4 rounded-xl bg-black/95 border border-primary/60 text-sm text-center text-white opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50 shadow-[0_0_30px_rgba(255,0,0,0.5)] pointer-events-none">
-                  {/* Arrow Indicator */}
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-primary/60"></div>
+            {progressionSteps.map((step, index) => (
+              <div 
+                key={step.id}
+                className="w-full md:w-1/3 h-[400px] perspective-1000 group cursor-pointer"
+                onClick={() => setFlippedIndex(flippedIndex === index ? null : index)}
+              >
+                <div className={`relative w-full h-full transition-transform duration-700 preserve-3d ${flippedIndex === index ? 'rotate-y-180' : ''}`}>
                   
-                  <p className="font-mono text-primary mb-2 text-xs tracking-widest uppercase">Match Info</p>
-                  <p className="leading-relaxed">Match played on <span className="font-bold text-white">Erangel</span> map.</p>
-                  <p className="text-red-400 mt-1 font-bold">25 Teams play match.</p>
+                  {/* Front Side */}
+                  <div className={`absolute inset-0 backface-hidden glass rounded-xl flex flex-col items-center justify-center p-8 border glow-border ${step.highlight ? 'border-primary/40 md:scale-110 shadow-[0_0_30px_rgba(255,0,0,0.15)] bg-background/95' : 'border-primary/20 bg-background/90'}`}>
+                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(255,0,0,0.3)] transition-transform ${step.trophyIcon ? 'bg-primary' : 'bg-background border-2 border-primary'}`}>
+                      <step.icon className={`w-8 h-8 md:w-10 md:h-10 ${step.trophyIcon ? 'text-black' : 'text-primary'}`} />
+                    </div>
+                    <h4 className={`font-mono text-2xl font-bold mb-4 ${step.highlight ? 'md:text-3xl text-white drop-shadow-[0_0_8px_rgba(255,0,0,0.5)]' : 'text-foreground'}`}>
+                      {step.title}
+                    </h4>
+                    <div className={`inline-block border rounded-full py-1 px-4 ${step.highlight ? 'border-primary bg-primary/20' : 'border-primary/30 bg-primary/5'}`}>
+                      <p className={`text-sm font-bold tracking-wide ${step.highlight ? 'text-white' : 'text-primary'}`}>
+                        {step.secondaryText}
+                      </p>
+                    </div>
+                    <p className="mt-6 text-[10px] font-mono text-muted-foreground uppercase animate-pulse">Click to Reveal Specs</p>
+                  </div>
+
+                  {/* Back Side */}
+                  <div className="absolute inset-0 backface-hidden glass rounded-xl border border-primary/60 bg-black/95 flex flex-col items-center justify-center p-8 rotate-y-180 shadow-[0_0_30px_rgba(255,0,0,0.5)]">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 border border-primary/30">
+                      <Calendar className="w-6 h-6 text-primary" />
+                    </div>
+                    <p className="font-mono text-primary mb-2 text-xs tracking-widest uppercase">Match Intelligence</p>
+                    <div className="space-y-4 text-center">
+                      <div>
+                        <p className="text-[10px] text-muted-foreground uppercase mb-1">Combat Map</p>
+                        <p className="text-xl font-bold text-white uppercase tracking-tight">{step.map}</p>
+                      </div>
+                      <div className="w-12 h-[1px] bg-primary/30 mx-auto" />
+                      <div>
+                        <p className="text-[10px] text-muted-foreground uppercase mb-1">Engaged Squads</p>
+                        <p className="text-xl font-bold text-red-500 uppercase tracking-tight">{step.teams}</p>
+                      </div>
+                    </div>
+                    <p className="mt-8 text-[9px] font-mono text-primary/60 uppercase italic">Auto-resets in 15s</p>
+                  </div>
+
                 </div>
               </div>
-
-              <div className="inline-block border border-primary/30 rounded-full py-1 px-4 bg-primary/5">
-                <p className="text-white text-sm font-bold tracking-wide">
-                  TOP 10 <span className="text-primary">→</span> SEMI
-                </p>
-              </div>
-            </div>
-
-            {/* Step 2: Semi Finals */}
-            <div className="group glass relative z-10 w-full md:w-1/3 flex flex-col items-center text-center p-8 rounded-xl border-2 border-primary/40 glow-border bg-background/90 backdrop-blur-xl md:scale-110 shadow-[0_0_30px_rgba(255,0,0,0.15)] hover:bg-background/95 transition-colors">
-              <div className="w-20 h-20 rounded-full bg-background border-2 border-primary flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(255,0,0,0.6)] group-hover:scale-110 transition-transform">
-                <Skull className="w-10 h-10 text-primary group-hover:text-red-500 transition-colors" />
-              </div>
-              
-              <div className="relative mb-4 flex flex-col items-center">
-                <h4 className="font-mono text-2xl md:text-3xl font-bold cursor-help border-b border-dashed border-primary/50 pb-1 text-white drop-shadow-[0_0_8px_rgba(255,0,0,0.5)]">SEMI FINAL</h4>
-                
-                {/* Dropdown / Tooltip */}
-                <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-64 p-4 rounded-xl bg-black/95 border border-primary/60 text-sm text-center text-white opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50 shadow-[0_0_30px_rgba(255,0,0,0.5)] pointer-events-none">
-                  {/* Arrow Indicator */}
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-primary/60"></div>
-                  
-                  <p className="font-mono text-primary mb-2 text-xs tracking-widest uppercase">Match Info</p>
-                  <p className="leading-relaxed">Match played on <span className="font-bold text-white">Sanhok</span> map.</p>
-                  <p className="text-red-400 mt-1 font-bold">10 Teams play match.</p>
-                </div>
-              </div>
-
-              <div className="inline-block border border-primary rounded-full py-1 px-4 bg-primary/20">
-                <p className="text-white text-md font-bold tracking-wide">
-                  TOP 4 <span className="text-primary">→</span> FINAL
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3: Grand Finals */}
-            <div className="group glass relative z-10 w-full md:w-1/3 flex flex-col items-center text-center p-8 rounded-xl border border-primary/20 glow-border bg-background/90 backdrop-blur-xl hover:bg-background/95 transition-colors">
-              <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center mb-6 shadow-[0_0_25px_rgba(255,0,0,0.8)] group-hover:scale-110 transition-transform">
-                <Trophy className="w-8 h-8 text-black" />
-              </div>
-              
-              <div className="relative mb-4 flex flex-col items-center">
-                <h4 className="font-mono text-2xl font-bold cursor-help border-b border-dashed border-primary/50 pb-1 text-primary">GRAND FINAL</h4>
-                
-                {/* Dropdown / Tooltip */}
-                <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-64 p-4 rounded-xl bg-black/95 border border-primary/60 text-sm text-center text-white opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50 shadow-[0_0_30px_rgba(255,0,0,0.5)] pointer-events-none">
-                  {/* Arrow Indicator */}
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-primary/60"></div>
-                  
-                  <p className="font-mono text-primary mb-2 text-xs tracking-widest uppercase">Match Info</p>
-                  <p className="leading-relaxed">Match played on <span className="font-bold text-white">Livik</span> map.</p>
-                  <p className="text-red-400 mt-1 font-bold">4 Teams play match.</p>
-                </div>
-              </div>
-
-              <div className="inline-block border border-primary/30 rounded-full py-1 px-4 bg-primary/5">
-                <p className="text-muted-foreground text-sm font-bold tracking-wide group-hover:text-white transition-colors">
-                  ULTIMATE CHAMPION
-                </p>
-              </div>
-            </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
           </div>
         </div>
