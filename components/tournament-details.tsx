@@ -6,7 +6,7 @@ const details = [
   {
     icon: Trophy,
     title: "Prize Pool",
-    value: "₹1990",
+    value: "₹2000",
   },
   {
     icon: Calendar,
