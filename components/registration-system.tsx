@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { db } from "@/firebase"
 import { collection, doc, setDoc, getDoc, query, where, getDocs, onSnapshot } from "firebase/firestore"
-import { CheckCircle, Loader2, AlertCircle, Copy, ExternalLink, Upload, Trophy, QrCode, Users } from "lucide-react"
+import { ArrowLeft, CheckCircle, Loader2, AlertCircle, Copy, ExternalLink, Upload, Trophy, QrCode, Users } from "lucide-react"
+import Link from "next/link"
 import { toast } from "sonner"
 
 type Step = "FORM" | "PAYMENT" | "STATUS"
@@ -402,6 +403,13 @@ export function RegistrationSystem() {
             NEXT: PROCEED TO PAYMENT
             <CheckCircle className="w-5 h-5 group-hover:scale-125 transition-transform" />
           </button>
+
+          <div className="flex justify-start mt-4">
+            <Link href="/" className="text-sm text-muted-foreground hover:text-white transition-colors flex items-center gap-2 font-mono uppercase tracking-widest">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Link>
+          </div>
         </form>
       )}
 
