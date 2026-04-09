@@ -82,7 +82,7 @@ export default function LoginPage() {
                 <Trophy className="w-8 h-8 text-primary" />
               </div>
               <h2 className="text-3xl font-mono font-black italic uppercase text-white tracking-tighter mb-2 drop-shadow-[0_0_10px_rgba(255,0,60,0.5)]">
-                Squard Access
+                Squad Access
               </h2>
               <p className="text-muted-foreground text-[10px] font-mono tracking-[0.2em] uppercase">
                 Verify Credentials to view Status

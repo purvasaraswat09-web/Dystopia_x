@@ -4,7 +4,7 @@ import { Instagram, Youtube } from "lucide-react"
 
 const socialLinks = [
   { icon: Instagram, href: "https://www.instagram.com/dystopia___x/#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: Youtube, href: "https://youtube.com/@dystopia-x-team?si=3EQMZ5c3ka1pcB2J", label: "YouTube" },
 ]
 
 export function Footer() {

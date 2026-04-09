@@ -524,7 +524,7 @@ export function RegistrationSystem() {
                 
                 <div className="pt-4 border-t border-yellow-500/10">
                   <p className="text-[10px] text-yellow-500/60 font-mono uppercase mb-3 leading-tight">
-                    Note: Click only when you want to join any other squard
+                    Note: Click only when you want to join any other squad
                   </p>
                   <button 
                     onClick={handleRegisterAnother}
@@ -566,7 +566,7 @@ export function RegistrationSystem() {
 
               <div className="pt-4 mt-8 border-t border-green-500/20 text-left w-full max-w-sm mx-auto">
                 <p className="text-[10px] text-green-500/60 font-mono uppercase mb-3 leading-tight">
-                  Note: Click only when you want to join any other squard
+                  Note: Click only when you want to join any other squad
                 </p>
                 <button 
                   onClick={handleRegisterAnother}

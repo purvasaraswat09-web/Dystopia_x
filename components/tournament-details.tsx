@@ -7,7 +7,12 @@ const details = [
   {
     icon: Trophy,
     title: "Prize Pool",
-    value: "₹2000",
+    value: (
+      <span className="flex flex-col gap-1">
+        <span className="text-2xl md:text-3xl">BGMI - ₹2000</span>
+        <span className="text-xl md:text-2xl text-primary">Free Fire - ₹1100</span>
+      </span>
+    ),
   },
   {
     icon: Calendar,
@@ -97,9 +102,9 @@ export function TournamentDetails() {
               <h3 className="text-sm font-mono tracking-widest text-muted-foreground uppercase mb-2">
                 {detail.title}
               </h3>
-              <p className="text-3xl md:text-4xl font-mono font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+              <div className="text-3xl md:text-4xl font-mono font-bold text-foreground mb-3 group-hover:text-white transition-colors">
                 {detail.value}
-              </p>
+              </div>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {detail.description}
               </p>
