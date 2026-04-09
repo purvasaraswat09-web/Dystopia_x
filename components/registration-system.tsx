@@ -458,41 +458,39 @@ export function RegistrationSystem() {
           )}
 
           {(status === "approved" || (!status && formData.status === "approved")) && (
-            <>
+            <div className="space-y-6">
               <div className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(34,197,94,0.6)]">
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
+              
               <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
-                YOUR PAYMENT IS DONE SUCCESSFULLY ✅
+                ✅ Payment Successful
               </h2>
-              <p className="text-green-400 font-mono text-sm uppercase tracking-widest mb-2 animate-pulse">
-                Transaction is done successfully!
-              </p>
-              <p className="text-green-500/70 font-mono text-xs uppercase tracking-widest mb-6">
-                Your registration is confirmed in our system
-              </p>
-              <div className="bg-green-500/10 border border-green-500/40 rounded-xl p-5 mb-6 max-w-sm mx-auto text-left">
-                <p className="text-white text-sm leading-relaxed mb-2">
-                  🎉 Squad <span className="text-green-400 font-bold uppercase">{formData.teamName}</span> is officially registered in the tournament!
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  Room ID &amp; Password will be sent to your WhatsApp number before the match.
-                </p>
+              
+              <div className="space-y-2">
+                <p className="text-white text-lg font-medium">Your payment has been successfully verified.</p>
+                <p className="text-muted-foreground">Your squad is now registered for the battle 🎮</p>
               </div>
-              <p className="text-muted-foreground text-xs uppercase tracking-widest mb-5 font-mono">
-                ── Want to register another squad? ──
-              </p>
-              <button
+              
+              <div className="bg-background/50 border border-green-500/30 rounded-2xl p-6 my-8 space-y-4 max-w-sm mx-auto text-left">
+                <div className="flex justify-between items-center border-b border-green-500/10 pb-3">
+                  <p className="text-sm text-muted-foreground"><strong>Team Name:</strong></p>
+                  <p className="text-sm font-bold text-white uppercase">{formData.teamName}</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-muted-foreground"><strong>UTR Ref:</strong></p>
+                  <p className="text-sm font-mono text-primary">{formData.utrId}</p>
+                </div>
+              </div>
+
+              <button 
                 onClick={handleRegisterAnother}
-                className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-[0_0_25px_rgba(255,0,60,0.5)] transition-all border border-primary/50 flex items-center justify-center gap-3 text-base tracking-widest uppercase mb-2 active:scale-95"
+                className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-black rounded-xl shadow-[0_0_30px_rgba(255,0,60,0.5)] transition-all flex items-center justify-center gap-3 text-lg tracking-widest uppercase active:scale-95 border border-primary/50"
               >
                 <Trophy className="w-6 h-6" />
                 Register Another Squad
               </button>
-              <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
-                Enter a new squad name &amp; different mobile number
-              </p>
-            </>
+            </div>
           )}
 
           {(status === "rejected" || (!status && formData.status === "rejected")) && (
