@@ -1,51 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { Trophy, Loader2, X, AlertCircle } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { Trophy } from "lucide-react"
 import { useState, useEffect } from "react"
-import { db } from "@/firebase"
-import { doc, getDoc } from "firebase/firestore"
 
 export function Header() {
   const pathname = usePathname()
-  const router = useRouter()
   const [tournamentFlipped, setTournamentFlipped] = useState(false)
   const [activeTab, setActiveTab] = useState("home")
   const isRegisterPage = pathname === "/register"
-
-  // Login State
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [loginPhone, setLoginPhone] = useState("")
-  const [isLoggingIn, setIsLoggingIn] = useState(false)
-  const [loginError, setLoginError] = useState("")
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoginError("")
-    if (loginPhone.length !== 10) {
-      setLoginError("Please enter a valid 10-digit number")
-      return
-    }
-    
-    setIsLoggingIn(true)
-    try {
-      const docRef = doc(db, "registrations", loginPhone)
-      const docSnap = await getDoc(docRef)
-      
-      if (docSnap.exists()) {
-        localStorage.setItem("temp_phone", loginPhone)
-        setIsLoginOpen(false)
-        router.push("/register")
-      } else {
-        setLoginError("No registration found with this WhatsApp number.")
-      }
-    } catch (error) {
-      setLoginError("Error checking registration. Please try again.")
-    } finally {
-      setIsLoggingIn(false)
-    }
-  }
+  const isLoginPage = pathname === "/login"
 
   useEffect(() => {
     if (isRegisterPage) return
@@ -123,14 +88,14 @@ export function Header() {
         </nav>
 
         <div>
-          {!isRegisterPage ? (
-            <button
-              onClick={() => setIsLoginOpen(true)}
+          {(!isRegisterPage && !isLoginPage) ? (
+            <Link
+              href="/login"
               className="relative inline-flex items-center justify-center px-6 py-2 text-sm font-bold font-mono tracking-widest bg-primary text-white rounded-none overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
               style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
             >
               LOGIN
-            </button>
+            </Link>
           ) : (
             <Link
               href="/"
@@ -142,51 +107,6 @@ export function Header() {
           )}
         </div>
       </div>
-
-      {/* Login Modal */}
-      {isLoginOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div className="glass relative max-w-sm w-full p-8 rounded-2xl border border-primary/30 shadow-[0_0_40px_rgba(255,0,60,0.2)] animate-in zoom-in-95 duration-300">
-             <button onClick={() => setIsLoginOpen(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors">
-               <X className="w-5 h-5" />
-             </button>
-             
-             <h3 className="font-mono text-2xl font-bold mb-2 uppercase italic text-white flex items-center gap-2">
-                <Trophy className="w-6 h-6 text-primary" />
-                Login
-             </h3>
-             <p className="text-muted-foreground text-[10px] uppercase tracking-[0.2em] font-mono mb-6">Enter your Squad's WhatsApp Number to see your transaction status.</p>
-             
-             <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                   <input
-                     type="tel"
-                     maxLength={10}
-                     placeholder="10-digit phone number"
-                     value={loginPhone}
-                     onChange={(e) => setLoginPhone(e.target.value.replace(/\D/g, ''))}
-                     className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 outline-none focus:border-primary transition-all font-mono tracking-widest text-center shadow-inner"
-                   />
-                </div>
-                
-                {loginError && (
-                  <p className="text-red-500 text-[10px] font-mono flex items-center justify-center gap-1 uppercase tracking-wider text-center">
-                     <AlertCircle className="w-3 h-3 flex-shrink-0" /> {loginError}
-                  </p>
-                )}
-                
-                <button
-                  type="submit"
-                  disabled={isLoggingIn || loginPhone.length !== 10}
-                  className="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold tracking-widest rounded-xl shadow-[0_0_20px_rgba(255,0,60,0.3)] border border-primary/50 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm"
-                >
-                  {isLoggingIn ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                  CHECK STATUS
-                </button>
-             </form>
-          </div>
-        </div>
-      )}
     </header>
   )
 }
