@@ -454,7 +454,13 @@ export function RegistrationSystem() {
                   Once admin verifies your payment, you will receive a WhatsApp confirmation. You can then register another squad.
                 </p>
               </div>
-
+              <button
+                onClick={handleRegisterAnother}
+                className="w-full py-4 bg-muted hover:bg-muted/80 text-white font-bold rounded-xl border border-muted-foreground/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mb-4 active:scale-95"
+              >
+                <Users className="w-5 h-5" />
+                Register Another Squad
+              </button>
             </>
           )}
 
@@ -464,10 +470,10 @@ export function RegistrationSystem() {
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
               <h2 className="text-4xl font-mono font-bold mb-2 italic uppercase text-green-400 tracking-tighter">
-                TRANSACTION DONE ✅
+                TRANSACTION SUCCESSFUL ✅
               </h2>
               <p className="text-green-400 font-mono text-sm uppercase tracking-widest mb-2 animate-pulse">
-                Payment Done Successfully!
+                Transaction is done successfully!
               </p>
               <p className="text-green-500/70 font-mono text-xs uppercase tracking-widest mb-6">
                 Your registration is confirmed in our system
