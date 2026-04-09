@@ -54,7 +54,7 @@ export function RegistrationSystem() {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const UPI_ID = "krishsiingh444@oksbi"
-  const AMOUNT = "200"
+  const AMOUNT = "199"
   const NAME = "Krish Singh"
   const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(NAME)}&am=${AMOUNT}&cu=INR`
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`

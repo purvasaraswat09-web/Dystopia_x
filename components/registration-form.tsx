@@ -198,7 +198,7 @@ export function RegistrationForm() {
   }
 
   if (isSuccess) {
-    const upiUrl = `upi://pay?pa=krishsiingh444@pingpay&pn=Krish%20Singh&cu=INR&am=200`;
+    const upiUrl = `upi://pay?pa=krishsiingh444@pingpay&pn=Krish%20Singh&cu=INR&am=199`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
 
     return (
@@ -215,7 +215,7 @@ export function RegistrationForm() {
                   PAYMENT REQUIRED
                 </h3>
                 <p className="text-muted-foreground mb-8 text-sm">
-                  Scan the QR code below to pay <span className="text-primary font-bold">₹200 Entry Fee</span>. After payment, upload the screenshot to verify your registration.
+                  Scan the QR code below to pay <span className="text-primary font-bold">₹199 Entry Fee</span>. After payment, upload the screenshot to verify your registration.
                 </p>
 
                 <div className="bg-white p-4 rounded-xl inline-block mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
@@ -312,7 +312,7 @@ export function RegistrationForm() {
             REGISTER YOUR SQUAD
           </h2>
           <p className="text-muted-foreground mt-2">
-            Enter details for all 4 players to lock in your squad. Entry fee: ₹200
+            Enter details for all 4 players to lock in your squad. Entry fee: ₹199
           </p>
         </div>
 

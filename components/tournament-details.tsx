@@ -6,7 +6,7 @@ const details = [
   {
     icon: Trophy,
     title: "Prize Pool",
-    value: "₹2000",
+    value: "₹1990",
   },
   {
     icon: Calendar,
@@ -17,7 +17,7 @@ const details = [
   {
     icon: Ticket,
     title: "Entry Fee",
-    value: "₹200",
+    value: "₹199/Squad",
     //description: "Early bird: ₹149 (ends May 1st)",
   },
 ]
