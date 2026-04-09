@@ -405,10 +405,10 @@ export function RegistrationSystem() {
           </button>
 
           <div className="flex justify-start mt-4">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-white transition-colors flex items-center gap-2 font-mono uppercase tracking-widest">
+            <button type="button" onClick={() => router.back()} className="text-sm text-muted-foreground hover:text-white transition-colors flex items-center gap-2 font-mono uppercase tracking-widest">
               <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
+              Go Back
+            </button>
           </div>
         </form>
       )}
