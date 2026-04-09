@@ -136,29 +136,29 @@ export function RegistrationSystem() {
       newErrors.phone = "Phone number must be exactly 10 digits"
     }
 
-    const uidRegex = /^\d{9,11}$/
+    const uidRegex = /^\d{8,11}$/
     if (!formData.gameUid) {
       newErrors.gameUid = "Captain Game ID is required"
     } else if (!uidRegex.test(formData.gameUid)) {
-      newErrors.gameUid = "ID must be 9-11 digits"
+      newErrors.gameUid = "ID must be 8-11 digits"
     }
 
     if (!formData.player2Uid) {
       newErrors.player2Uid = "Player 2 ID is required"
     } else if (!uidRegex.test(formData.player2Uid)) {
-      newErrors.player2Uid = "ID must be 9-11 digits"
+      newErrors.player2Uid = "ID must be 8-11 digits"
     }
 
     if (!formData.player3Uid) {
       newErrors.player3Uid = "Player 3 ID is required"
     } else if (!uidRegex.test(formData.player3Uid)) {
-      newErrors.player3Uid = "ID must be 9-11 digits"
+      newErrors.player3Uid = "ID must be 8-11 digits"
     }
 
     if (!formData.player4Uid) {
       newErrors.player4Uid = "Player 4 ID is required"
     } else if (!uidRegex.test(formData.player4Uid)) {
-      newErrors.player4Uid = "ID must be 9-11 digits"
+      newErrors.player4Uid = "ID must be 8-11 digits"
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -544,19 +544,6 @@ export function RegistrationSystem() {
                 <p className="text-muted-foreground text-xs mb-6 font-mono uppercase tracking-tight">
                   Once admin verifies your payment, you will receive a WhatsApp confirmation.
                 </p>
-                
-                <div className="pt-4 border-t border-yellow-500/10">
-                  <p className="text-[10px] text-yellow-500/60 font-mono uppercase mb-3 leading-tight">
-                    Note: Click only when you want to join any other squad
-                  </p>
-                  <button 
-                    onClick={handleRegisterAnother}
-                    className="w-full py-3 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 font-mono font-bold rounded-xl border border-yellow-500/30 transition-all flex items-center justify-center gap-2 group text-xs uppercase"
-                  >
-                    <Trophy className="w-4 h-4" />
-                    Register Another Squad
-                  </button>
-                </div>
               </div>
             </>
           )}
@@ -591,17 +578,6 @@ export function RegistrationSystem() {
                 </div>
               </div>
 
-              <div className="pt-4 mt-8 border-t border-green-500/20 text-left w-full max-w-sm mx-auto">
-                <p className="text-[10px] text-green-500/60 font-mono uppercase mb-3 leading-tight">
-                  Note: Click only when you want to join any other squad
-                </p>
-                <button 
-                  onClick={handleRegisterAnother}
-                  className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-black rounded-xl shadow-[0_0_30px_rgba(255,0,60,0.5)] transition-all flex items-center justify-center gap-3 text-lg tracking-widest uppercase active:scale-95 border border-primary/50"
-                >
-                  <Trophy className="w-6 h-6" />
-                  Register Another Squad
-                </button>
               </div>
             </div>
           )}
@@ -615,12 +591,6 @@ export function RegistrationSystem() {
               <p className="text-muted-foreground mb-8 leading-relaxed max-w-sm mx-auto">
                 Transaction proof was invalid or rejected. Please check your data and try again.
               </p>
-              <button
-                onClick={handleRegisterAnother}
-                className="w-full py-4 bg-primary text-white font-bold rounded-xl"
-              >
-                RE-REGISTER SQUAD
-              </button>
             </>
           )}
 
@@ -637,6 +607,19 @@ export function RegistrationSystem() {
               <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">UTR Ref</span>
               <span className="text-sm font-mono text-primary select-all">{formData.utrId || "---"}</span>
             </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-border">
+             <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-4 leading-tight max-w-xs mx-auto">
+               Note: Click only when you want to register a brand new squad
+             </p>
+             <button 
+               onClick={handleRegisterAnother}
+               className="w-full py-5 bg-background border border-primary text-primary hover:bg-primary/10 font-black rounded-xl transition-all flex items-center justify-center gap-3 text-lg tracking-widest uppercase active:scale-95 max-w-sm mx-auto shadow-[0_0_20px_rgba(255,0,60,0.1)] hover:shadow-[0_0_30px_rgba(255,0,60,0.3)]"
+             >
+               <Trophy className="w-6 h-6" />
+               Register Another Squad
+             </button>
           </div>
         </div>
       )}
