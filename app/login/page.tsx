@@ -11,6 +11,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [squadName, setSquadName] = useState("")
   const [phone, setPhone] = useState("")
+  const [game, setGame] = useState("BGMI")
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [loginError, setLoginError] = useState("")
 
@@ -36,6 +37,13 @@ export default function LoginPage() {
       if (docSnap.exists()) {
         const data = docSnap.data()
         
+        // Verify game matches
+        const dbGame = data.game || "BGMI"
+        if (dbGame !== game) {
+          setLoginError(`This squad is registered for ${dbGame}, not ${game}.`)
+          return
+        }
+
         // Verify both phone and squad name match (case insensitive)
         const dbSquadName = data.teamName || ""
         if (dbSquadName.toLowerCase().trim() === squadName.toLowerCase().trim()) {
@@ -91,7 +99,23 @@ export default function LoginPage() {
 
             <form onSubmit={handleLogin} className="space-y-6">
               
-              <div className="space-y-4">
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-3">
+                    Combat Theater
+                  </label>
+                  <div className="flex gap-4">
+                    <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-background/50 border rounded-xl cursor-pointer transition-all duration-300 ${game === 'BGMI' ? 'border-primary text-primary shadow-[0_0_15px_rgba(255,0,0,0.2)] scale-[1.02]' : 'border-border text-muted-foreground hover:border-primary/50 hover:text-white'}`}>
+                      <input type="radio" name="game" value="BGMI" checked={game === 'BGMI'} onChange={(e) => setGame(e.target.value)} className="hidden" />
+                      <span className="font-bold tracking-widest uppercase font-mono text-xs">BGMI</span>
+                    </label>
+                    <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-background/50 border rounded-xl cursor-pointer transition-all duration-300 ${game === 'Free Fire' ? 'border-red-500 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)] scale-[1.02]' : 'border-border text-muted-foreground hover:border-red-500/50 hover:text-white'}`}>
+                      <input type="radio" name="game" value="Free Fire" checked={game === 'Free Fire'} onChange={(e) => setGame(e.target.value)} className="hidden" />
+                      <span className="font-bold tracking-widest uppercase font-mono text-xs">FREE FIRE</span>
+                    </label>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">
                     Registered Squad Name

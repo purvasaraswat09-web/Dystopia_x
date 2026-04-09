@@ -10,7 +10,7 @@ const details = [
     value: (
       <span className="flex flex-col gap-1">
         <span className="text-2xl md:text-3xl">BGMI - ₹2000</span>
-        <span className="text-2xl md:text-23xl text-primary">Free Fire - ₹1100</span>
+        <span className="text-2xl md:text-3xl text-primary">Free Fire - ₹1100</span>
       </span>
     ),
   },
@@ -34,8 +34,10 @@ const progressionSteps = [
     title: "QUALIFIERS",
     icon: Swords,
     secondaryText: "TOP 10 → SEMI",
-    map: "Erangel",
-    teams: "25 Teams",
+    bgmiMap: "Erangel",
+    bgmiTeams: "25 Teams",
+    ffMap: "Bermuda",
+    ffTeams: "13 Teams",
     highlight: false,
   },
   {
@@ -43,8 +45,10 @@ const progressionSteps = [
     title: "SEMI FINAL",
     icon: Skull,
     secondaryText: "TOP 4 → FINAL",
-    map: "Sanhok",
-    teams: "10 Teams",
+    bgmiMap: "Sanhok",
+    bgmiTeams: "10 Teams",
+    ffMap: "Purgatory",
+    ffTeams: "6 Teams",
     highlight: true,
   },
   {
@@ -52,8 +56,10 @@ const progressionSteps = [
     title: "GRAND FINAL",
     icon: Trophy,
     secondaryText: "ULTIMATE CHAMPION",
-    map: "Livik",
-    teams: "4 Teams",
+    bgmiMap: "Livik",
+    bgmiTeams: "4 Teams",
+    ffMap: "CS (Bermuda Remastered)",
+    ffTeams: "2 Teams",
     highlight: false,
     trophyIcon: true,
   },
@@ -157,23 +163,41 @@ export function TournamentDetails() {
                   </div>
 
                   {/* Back Side */}
-                  <div className="absolute inset-0 backface-hidden glass rounded-xl border border-primary/60 bg-black/95 flex flex-col items-center justify-center p-8 rotate-y-180 shadow-[0_0_30px_rgba(255,0,0,0.5)]">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 border border-primary/30">
-                      <Calendar className="w-6 h-6 text-primary" />
+                  <div className="absolute inset-0 backface-hidden glass rounded-xl border border-primary/60 bg-black/95 flex flex-col items-center justify-center px-4 py-6 rotate-y-180 shadow-[0_0_30px_rgba(255,0,0,0.5)]">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 border border-primary/30">
+                      <Calendar className="w-5 h-5 text-primary" />
                     </div>
-                    <p className="font-mono text-primary mb-2 text-xs tracking-widest uppercase">Match Intelligence</p>
-                    <div className="space-y-4 text-center">
-                      <div>
-                        <p className="text-[10px] text-muted-foreground uppercase mb-1">Combat Map</p>
-                        <p className="text-xl font-bold text-white uppercase tracking-tight">{step.map}</p>
-                      </div>
-                      <div className="w-12 h-[1px] bg-primary/30 mx-auto" />
-                      <div>
-                        <p className="text-[10px] text-muted-foreground uppercase mb-1">Engaged Squads</p>
-                        <p className="text-xl font-bold text-red-500 uppercase tracking-tight">{step.teams}</p>
-                      </div>
+                    <p className="font-mono text-primary mb-3 text-xs tracking-widest uppercase">Match Intelligence</p>
+                    
+                    <div className="w-full grid grid-cols-2 gap-2 text-center mt-2">
+                       {/* BGMI Data */}
+                       <div className="space-y-3 bg-white/5 rounded-lg p-2 border border-white/10">
+                          <p className="text-[10px] text-white uppercase font-black tracking-widest border-b border-primary/30 mx-2 pb-1">BGMI</p>
+                          <div>
+                            <p className="text-[8px] text-muted-foreground uppercase leading-tight mb-1">Combat Map</p>
+                            <p className="text-xs font-bold text-white uppercase tracking-tight">{step.bgmiMap}</p>
+                          </div>
+                          <div>
+                            <p className="text-[8px] text-muted-foreground uppercase leading-tight mb-1">Engaged Squads</p>
+                            <p className="text-xs font-bold text-red-500 uppercase tracking-tight">{step.bgmiTeams}</p>
+                          </div>
+                       </div>
+                       
+                       {/* Free Fire Data */}
+                       <div className="space-y-3 bg-white/5 rounded-lg p-2 border border-white/10">
+                          <p className="text-[10px] text-white uppercase font-black tracking-widest border-b border-primary/30 mx-2 pb-1">Free Fire</p>
+                          <div>
+                            <p className="text-[8px] text-muted-foreground uppercase leading-tight mb-1">Combat Map</p>
+                            <p className="text-xs font-bold text-white uppercase tracking-tight leading-tight px-1">{step.ffMap}</p>
+                          </div>
+                          <div>
+                            <p className="text-[8px] text-muted-foreground uppercase leading-tight mb-1">Engaged Squads</p>
+                            <p className="text-xs font-bold text-red-500 uppercase tracking-tight">{step.ffTeams}</p>
+                          </div>
+                       </div>
                     </div>
-                    <p className="mt-8 text-[9px] font-mono text-primary/60 uppercase italic">Auto-resets in 15s</p>
+
+                    <p className="mt-6 text-[9px] font-mono text-primary/60 uppercase italic">Auto-resets in 15s</p>
                   </div>
 
                 </div>

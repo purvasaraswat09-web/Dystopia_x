@@ -8,6 +8,7 @@ import { toast } from "sonner"
 
 interface RegistrationData {
   id: string
+  game: string
   name: string
   teamName: string
   phone: string
@@ -162,9 +163,15 @@ export default function AdminDashboard() {
                     </time>
                   </div>
                   <h3 className="text-3xl font-black font-mono tracking-tighter text-white mb-2 uppercase italic group-hover:text-primary transition-colors">{reg.teamName}</h3>
-                  <div className="flex items-center gap-2 text-muted-foreground text-xs font-mono uppercase tracking-widest">
-                    <Users className="w-3 h-3 text-primary" />
-                    Squad Entry
+                  <div className="flex items-center gap-2 mt-3">
+                    <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+                      <Users className="w-3 h-3 text-primary" />
+                      Squad Entry
+                    </div>
+                    <span className="text-muted-foreground/50 mx-1">•</span>
+                    <span className={`text-[10px] font-mono uppercase font-bold tracking-widest border px-2 py-0.5 rounded ${reg.game === 'Free Fire' ? 'text-red-400 border-red-400/30' : 'text-blue-400 border-blue-400/30'}`}>
+                      {reg.game || 'BGMI'}
+                    </span>
                   </div>
                 </div>
 

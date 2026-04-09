@@ -11,6 +11,7 @@ import { toast } from "sonner"
 type Step = "FORM" | "PAYMENT" | "STATUS"
 
 interface RegistrationData {
+  game: string
   name: string
   teamName: string
   phone: string
@@ -31,6 +32,7 @@ export function RegistrationSystem() {
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<"pending" | "approved" | "rejected" | null>(null)
   const [formData, setFormData] = useState<{
+    game: string
     name: string
     teamName: string
     phone: string
@@ -42,6 +44,7 @@ export function RegistrationSystem() {
     payerName: string
     status?: string
   }>({
+    game: "BGMI",
     name: "",
     teamName: "",
     phone: "",
@@ -105,6 +108,7 @@ export function RegistrationSystem() {
   const handleRegisterAnother = () => {
     localStorage.removeItem("temp_phone")
     setFormData({
+      game: "BGMI",
       name: "",
       teamName: "",
       phone: "",
@@ -283,6 +287,22 @@ export function RegistrationSystem() {
             <p className="text-muted-foreground text-xs uppercase tracking-widest font-mono">Step 1: Fill all player details</p>
           </div>
 
+          <div className="mb-4">
+            <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-3">
+              SELECT COMBAT THEATER
+            </label>
+            <div className="flex gap-4">
+              <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-background/50 border rounded-xl cursor-pointer transition-all duration-300 ${formData.game === 'BGMI' ? 'border-primary text-primary shadow-[0_0_15px_rgba(255,0,0,0.2)] scale-[1.02]' : 'border-border text-muted-foreground hover:border-primary/50 hover:text-white'}`}>
+                <input type="radio" name="game" value="BGMI" checked={formData.game === 'BGMI'} onChange={(e) => setFormData({ ...formData, game: e.target.value })} className="hidden" />
+                <span className="font-bold tracking-widest uppercase font-mono">BGMI</span>
+              </label>
+              <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 bg-background/50 border rounded-xl cursor-pointer transition-all duration-300 ${formData.game === 'Free Fire' ? 'border-red-500 text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)] scale-[1.02]' : 'border-border text-muted-foreground hover:border-red-500/50 hover:text-white'}`}>
+                <input type="radio" name="game" value="Free Fire" checked={formData.game === 'Free Fire'} onChange={(e) => setFormData({ ...formData, game: e.target.value })} className="hidden" />
+                <span className="font-bold tracking-widest uppercase font-mono">FREE FIRE</span>
+              </label>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="md:col-span-2">
               <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Squad Name (Team Name)</label>
@@ -421,6 +441,9 @@ export function RegistrationSystem() {
           </div>
 
           <div className="bg-background/50 rounded-xl p-6 border border-border mb-8 flex flex-col items-center">
+            <div className="mb-4 py-1 px-4 border border-primary/40 bg-primary/10 rounded-full">
+              <span className="text-xs font-mono font-bold text-white tracking-widest uppercase">{formData.game} SQUAD</span>
+            </div>
             <p className="text-5xl font-mono font-bold text-primary mb-2">₹{AMOUNT}</p>
             <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] mb-6">ENTRY FEE PER SQUAD</p>
             
@@ -555,6 +578,10 @@ export function RegistrationSystem() {
               
               <div className="bg-background/50 border border-green-500/30 rounded-2xl p-6 my-8 space-y-4 max-w-sm mx-auto text-left">
                 <div className="flex justify-between items-center border-b border-green-500/10 pb-3">
+                  <p className="text-sm text-muted-foreground"><strong>Combat Level:</strong></p>
+                  <p className={`text-sm font-bold uppercase ${formData.game === 'Free Fire' ? 'text-red-400' : 'text-blue-400'}`}>{formData.game}</p>
+                </div>
+                <div className="flex justify-between items-center border-b border-green-500/10 pb-3">
                   <p className="text-sm text-muted-foreground"><strong>Team Name:</strong></p>
                   <p className="text-sm font-bold text-white uppercase">{formData.teamName}</p>
                 </div>
@@ -598,6 +625,10 @@ export function RegistrationSystem() {
           )}
 
           <div className="p-6 bg-muted/20 rounded-2xl border border-border inline-block w-full mt-6">
+            <div className="flex justify-between items-center mb-4 border-b border-border pb-4">
+              <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">Selected Game</span>
+              <span className={`text-sm font-bold uppercase ${formData.game === 'Free Fire' ? 'text-red-500' : 'text-blue-500'}`}>{formData.game || "BGMI"}</span>
+            </div>
             <div className="flex justify-between items-center mb-4 border-b border-border pb-4">
               <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-widest">Team Name</span>
               <span className="text-sm font-bold text-white uppercase">{formData.teamName || "SQUAD"}</span>
