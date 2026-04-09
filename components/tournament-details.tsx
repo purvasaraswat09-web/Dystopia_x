@@ -10,7 +10,7 @@ const details = [
     value: (
       <span className="flex flex-col gap-1">
         <span className="text-2xl md:text-3xl">BGMI - ₹2000</span>
-        <span className="text-xl md:text-2xl text-primary">Free Fire - ₹1100</span>
+        <span className="text-2xl md:text-23xl text-primary">Free Fire - ₹1100</span>
       </span>
     ),
   },
