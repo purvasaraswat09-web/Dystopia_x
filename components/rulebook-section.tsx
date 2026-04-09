@@ -50,6 +50,12 @@ const rules = [
     content:
       "All official communications will be through our Discord server. Joining the Discord is mandatory for participating squads. Match schedules and room IDs will be shared 30 minutes before each match.",
   },
+  {
+    id: "rule-8",
+    title: "No Respawning",
+    content:
+      "Respawning is strictly NOT allowed in any tournament matches. Once eliminated, a player stays eliminated. Any exploitation of event-specific respawn features will result in immediate disqualification.",
+  },
 ]
 
 export function RulebookSection() {

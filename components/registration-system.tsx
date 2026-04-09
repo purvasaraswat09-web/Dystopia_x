@@ -577,8 +577,6 @@ export function RegistrationSystem() {
                   <p className="text-sm font-mono text-primary">{formData.utrId}</p>
                 </div>
               </div>
-
-              </div>
             </div>
           )}
 
