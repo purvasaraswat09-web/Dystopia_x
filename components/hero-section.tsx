@@ -85,7 +85,7 @@ export function HeroSection() {
 
         <h1 className="font-mono text-5xl md:text-7xl lg:text-9xl font-bold tracking-wider mb-6 animate-glitch relative">
           <span className="relative z-10 text-white drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
-            DISTOPIA_X
+            DYSTOPIA_X
           </span>
         </h1>
 

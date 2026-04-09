@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { db, storage } from "@/firebase"
+import { db } from "@/firebase"
 import { collection, doc, setDoc, getDoc, query, where, getDocs, onSnapshot } from "firebase/firestore"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
-import { CheckCircle, Loader2, AlertCircle, Copy, ExternalLink, Camera, Upload, Trophy, QrCode, Users } from "lucide-react"
+import { CheckCircle, Loader2, AlertCircle, Copy, ExternalLink, Upload, Trophy, QrCode, Users } from "lucide-react"
 import { toast } from "sonner"
 
 type Step = "FORM" | "PAYMENT" | "STATUS"
@@ -52,6 +51,7 @@ export function RegistrationSystem() {
     utrId: "",
     payerName: "",
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const UPI_ID = "krishsiingh444@oksbi"
   const AMOUNT = "200"
@@ -119,24 +119,50 @@ export function RegistrationSystem() {
     toast.success("New registration started!")
   }
 
-
   const handleInitialRegistration = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.name || !formData.teamName || !formData.gameUid || !formData.player2Uid || !formData.player3Uid || !formData.player4Uid || !formData.phone) {
-      toast.error("Please fill all mandatory details")
-      return
+    const newErrors: Record<string, string> = {}
+    if (!formData.teamName) newErrors.teamName = "Squad Name is required"
+    if (!formData.name) newErrors.name = "Captain Name is required"
+    
+    if (!formData.phone) {
+      newErrors.phone = "WhatsApp Number is required"
+    } else if (formData.phone.length !== 10) {
+      newErrors.phone = "Phone number must be exactly 10 digits"
     }
-    if (formData.phone.length !== 10) {
-      toast.error("Phone number must be 10 digits")
+
+    const uidRegex = /^\d{9,11}$/
+    if (!formData.gameUid) {
+      newErrors.gameUid = "Captain Game ID is required"
+    } else if (!uidRegex.test(formData.gameUid)) {
+      newErrors.gameUid = "ID must be 9-11 digits"
+    }
+
+    if (!formData.player2Uid) {
+      newErrors.player2Uid = "Player 2 ID is required"
+    } else if (!uidRegex.test(formData.player2Uid)) {
+      newErrors.player2Uid = "ID must be 9-11 digits"
+    }
+
+    if (!formData.player3Uid) {
+      newErrors.player3Uid = "Player 3 ID is required"
+    } else if (!uidRegex.test(formData.player3Uid)) {
+      newErrors.player3Uid = "ID must be 9-11 digits"
+    }
+
+    if (!formData.player4Uid) {
+      newErrors.player4Uid = "Player 4 ID is required"
+    } else if (!uidRegex.test(formData.player4Uid)) {
+      newErrors.player4Uid = "ID must be 9-11 digits"
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      toast.error("Please fix the mistakes in the form")
       return
     }
 
-    const uidRegex = /^\d{9,11}$/;
-    if (!uidRegex.test(formData.gameUid)) return toast.error("Captain Game ID must be 9 to 11 digits")
-    if (!uidRegex.test(formData.player2Uid)) return toast.error("Player 2 Game ID must be 9 to 11 digits")
-    if (!uidRegex.test(formData.player3Uid)) return toast.error("Player 3 Game ID must be 9 to 11 digits")
-    if (!uidRegex.test(formData.player4Uid)) return toast.error("Player 4 Game ID must be 9 to 11 digits")
-
+    setErrors({})
     setLoading(true)
     try {
       // 1. Check if already registered
@@ -261,11 +287,15 @@ export function RegistrationSystem() {
               <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Squad Name (Team Name)</label>
               <input
                 required
-                className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/30"
+                className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all placeholder:text-muted-foreground/30 ${errors.teamName ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : 'border-border focus:border-primary'}`}
                 placeholder="Enter unique team name"
                 value={formData.teamName}
-                onChange={(e) => setFormData({ ...formData, teamName: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, teamName: e.target.value })
+                  if (errors.teamName) setErrors({ ...errors, teamName: "" })
+                }}
               />
+              {errors.teamName && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider animate-bounce">{errors.teamName}</p>}
             </div>
             
             <div className="space-y-5">
@@ -273,11 +303,15 @@ export function RegistrationSystem() {
                 <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Captain Name</label>
                 <input
                   required
-                  className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all"
+                  className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all ${errors.name ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : 'border-border focus:border-primary'}`}
                   placeholder="Full Name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, name: e.target.value })
+                    if (errors.name) setErrors({ ...errors, name: "" })
+                  }}
                 />
+                {errors.name && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider">{errors.name}</p>}
               </div>
               <div>
                 <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Captain WhatsApp No.</label>
@@ -285,22 +319,30 @@ export function RegistrationSystem() {
                   required
                   type="tel"
                   maxLength={10}
-                  className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all"
+                  className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all ${errors.phone ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : 'border-border focus:border-primary'}`}
                   placeholder="10-digit number"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })
+                    if (errors.phone) setErrors({ ...errors, phone: "" })
+                  }}
                 />
+                {errors.phone && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider">{errors.phone}</p>}
               </div>
               <div>
                 <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Captain Game ID</label>
                 <input
                   required
                   maxLength={11}
-                  className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all"
+                  className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all ${errors.gameUid ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : 'border-border focus:border-primary'}`}
                   placeholder="9-11 digit Game ID"
                   value={formData.gameUid}
-                  onChange={(e) => setFormData({ ...formData, gameUid: e.target.value.replace(/\D/g, '') })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, gameUid: e.target.value.replace(/\D/g, '') })
+                    if (errors.gameUid) setErrors({ ...errors, gameUid: "" })
+                  }}
                 />
+                {errors.gameUid && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider">{errors.gameUid}</p>}
               </div>
             </div>
 
@@ -310,33 +352,45 @@ export function RegistrationSystem() {
                 <input
                   required
                   maxLength={11}
-                  className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all text-primary/80"
+                  className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all text-primary/80 ${errors.player2Uid ? 'border-red-500' : 'border-border focus:border-primary'}`}
                   placeholder="9-11 digit Game ID"
                   value={formData.player2Uid}
-                  onChange={(e) => setFormData({ ...formData, player2Uid: e.target.value.replace(/\D/g, '') })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, player2Uid: e.target.value.replace(/\D/g, '') })
+                    if (errors.player2Uid) setErrors({ ...errors, player2Uid: "" })
+                  }}
                 />
+                {errors.player2Uid && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider">{errors.player2Uid}</p>}
               </div>
               <div>
                 <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 3 Game ID</label>
                 <input
                   required
                   maxLength={11}
-                  className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all text-primary/80"
+                  className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all text-primary/80 ${errors.player3Uid ? 'border-red-500' : 'border-border focus:border-primary'}`}
                   placeholder="9-11 digit Game ID"
                   value={formData.player3Uid}
-                  onChange={(e) => setFormData({ ...formData, player3Uid: e.target.value.replace(/\D/g, '') })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, player3Uid: e.target.value.replace(/\D/g, '') })
+                    if (errors.player3Uid) setErrors({ ...errors, player3Uid: "" })
+                  }}
                 />
+                {errors.player3Uid && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider">{errors.player3Uid}</p>}
               </div>
               <div>
                 <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Player 4 Game ID</label>
                 <input
                   required
                   maxLength={11}
-                  className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 focus:border-primary outline-none transition-all text-primary/80"
+                  className={`w-full bg-background/50 border rounded-xl px-4 py-3 outline-none transition-all text-primary/80 ${errors.player4Uid ? 'border-red-500' : 'border-border focus:border-primary'}`}
                   placeholder="9-11 digit Game ID"
                   value={formData.player4Uid}
-                  onChange={(e) => setFormData({ ...formData, player4Uid: e.target.value.replace(/\D/g, '') })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, player4Uid: e.target.value.replace(/\D/g, '') })
+                    if (errors.player4Uid) setErrors({ ...errors, player4Uid: "" })
+                  }}
                 />
+                {errors.player4Uid && <p className="text-red-500 text-[10px] mt-1 font-mono uppercase tracking-wider">{errors.player4Uid}</p>}
               </div>
             </div>
           </div>
@@ -450,9 +504,22 @@ export function RegistrationSystem() {
                 <p className="text-white text-sm leading-relaxed mb-1">
                   🎉 Squad <span className="text-yellow-400 font-bold uppercase">{formData.teamName}</span> — UTR submitted!
                 </p>
-                <p className="text-muted-foreground text-xs">
-                  Once admin verifies your payment, you will receive a WhatsApp confirmation. You can then register another squad.
+                <p className="text-muted-foreground text-xs mb-6 font-mono uppercase tracking-tight">
+                  Once admin verifies your payment, you will receive a WhatsApp confirmation.
                 </p>
+                
+                <div className="pt-4 border-t border-yellow-500/10">
+                  <p className="text-[10px] text-yellow-500/60 font-mono uppercase mb-3 leading-tight">
+                    Note: Click only when you want to join any other squard
+                  </p>
+                  <button 
+                    onClick={handleRegisterAnother}
+                    className="w-full py-3 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 font-mono font-bold rounded-xl border border-yellow-500/30 transition-all flex items-center justify-center gap-2 group text-xs uppercase"
+                  >
+                    <Trophy className="w-4 h-4" />
+                    Register Another Squad
+                  </button>
+                </div>
               </div>
             </>
           )}

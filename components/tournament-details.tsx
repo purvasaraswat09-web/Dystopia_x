@@ -17,7 +17,7 @@ const details = [
   {
     icon: Ticket,
     title: "Entry Fee",
-    value: "₹199/Squad",
+    value: "₹200",
     //description: "Early bird: ₹149 (ends May 1st)",
   },
 ]

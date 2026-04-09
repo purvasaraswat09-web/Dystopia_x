@@ -20,7 +20,7 @@ export function Footer() {
         <div className="flex flex-col items-center text-center">
           {/* Logo */}
           <h3 className="font-mono text-xl md:text-2xl font-bold tracking-wider mb-6">
-            DISTOPIA<span className="text-primary">_X</span>
+            DYSTOPIA<span className="text-primary">_X</span>
           </h3>
 
           {/* Social Links */}
@@ -39,7 +39,7 @@ export function Footer() {
 
           {/* Organizer */}
           <p className="text-muted-foreground text-sm">
-            Organized by <span className="text-foreground font-medium">Distopia_x</span>
+            Organized by <span className="text-foreground font-medium">Dystopia_x</span>
           </p>
 
           {/* Developers */}
@@ -62,7 +62,7 @@ export function Footer() {
 
           {/* Copyright */}
           <p className="text-xs text-muted-foreground/60">
-            © {new Date().getFullYear()} Distopia_x. All rights reserved. Not affiliated with Krafton or BGMI.
+            © {new Date().getFullYear()} Dystopia_x. All rights reserved. Not affiliated with Krafton or BGMI.
           </p>
         </div>
       </div>

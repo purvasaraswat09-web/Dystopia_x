@@ -16,8 +16,8 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
-  title: 'Distopia_x | College eSports Tournament',
-  description: 'Join the ultimate BGMI college tournament. Compete, dominate, and claim your glory in Distopia_x.',
+  title: 'Dystopia_x | College eSports Tournament',
+  description: 'Join the ultimate BGMI college tournament. Compete, dominate, and claim your glory in Dystopia_x.',
   generator: 'v0.app',
   icons: {
     icon: [

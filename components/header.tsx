@@ -41,7 +41,7 @@ export function Header() {
             <Trophy className="w-6 h-6 text-primary" />
           </div>
           <span className="font-mono text-xl font-bold tracking-tighter text-white">
-            DISTOPIA<span className="text-primary">_X</span>
+            DYSTOPIA<span className="text-primary">_X</span>
           </span>
         </Link>
 

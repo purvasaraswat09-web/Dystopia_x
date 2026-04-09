@@ -8,6 +8,16 @@
 8:"$Sreact.suspense"
 b:I[97367,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"ViewportBoundary"]
 d:I[97367,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"MetadataBoundary"]
+f:I[68027,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_n1:"$Sreact.fragment"
+2:I[13293,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"Header"]
+3:I[39756,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"default"]
+4:I[37457,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"default"]
+5:I[2355,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"Analytics"]
+6:I[58424,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js","/_next/static/chunks/0j8xcszhgs8sf.js"],"RegistrationForm"]
+7:I[97367,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+b:I[97367,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"ViewportBoundary"]
+d:I[97367,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"MetadataBoundary"]
 f:I[68027,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"default",1]
 :HL["/_next/static/chunks/0ouknp1_.dfme.css","style"]
 :HL["/_next/static/chunks/0fh66zs5-nqmd.css","style"]
@@ -23,4 +33,4 @@ a:"$W10"
 c:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
 11:I[27201,["/_next/static/chunks/0ity9uk-0gp2w.js","/_next/static/chunks/0d3shmwh5_nmn.js"],"IconMark"]
 9:null
-e:[["$","title","0",{"children":"Distopia_x | College eSports Tournament"}],["$","meta","1",{"name":"description","content":"Join the ultimate BGMI college tournament. Compete, dominate, and claim your glory in Distopia_x."}],["$","meta","2",{"name":"generator","content":"v0.app"}],["$","link","3",{"rel":"icon","href":"/icon-light-32x32.png","media":"(prefers-color-scheme: light)"}],["$","link","4",{"rel":"icon","href":"/icon-dark-32x32.png","media":"(prefers-color-scheme: dark)"}],["$","link","5",{"rel":"icon","href":"/icon.svg","type":"image/svg+xml"}],["$","link","6",{"rel":"apple-touch-icon","href":"/apple-icon.png"}],["$","$L11","7",{}]]
+e:[["$","title","0",{"children":"DYSTOPIA_x | College eSports Tournament"}],["$","meta","1",{"name":"description","content":"Join the ultimate BGMI college tournament. Compete, dominate, and claim your glory in DYSTOPIA_x."}],["$","meta","2",{"name":"generator","content":"v0.app"}],["$","link","3",{"rel":"icon","href":"/icon-light-32x32.png","media":"(prefers-color-scheme: light)"}],["$","link","4",{"rel":"icon","href":"/icon-dark-32x32.png","media":"(prefers-color-scheme: dark)"}],["$","link","5",{"rel":"icon","href":"/icon.svg","type":"image/svg+xml"}],["$","link","6",{"rel":"apple-touch-icon","href":"/apple-icon.png"}],["$","$L11","7",{}]]
