@@ -465,6 +465,12 @@ export function RegistrationSystem() {
 
             <div>
               <label className="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">UTR ID / UPI Ref No.</label>
+              <div className="mb-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg shadow-inner">
+                <p className="text-[10px] font-mono uppercase tracking-wider text-yellow-500 flex items-center justify-center gap-2 text-center leading-snug">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 animate-pulse" />
+                  Please fill UTR ID carefully. The payment is verified by the UTR ID.
+                </p>
+              </div>
               <input
                 required
                 maxLength={12}
@@ -558,13 +564,18 @@ export function RegistrationSystem() {
                 </div>
               </div>
 
-              <button 
-                onClick={handleRegisterAnother}
-                className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-black rounded-xl shadow-[0_0_30px_rgba(255,0,60,0.5)] transition-all flex items-center justify-center gap-3 text-lg tracking-widest uppercase active:scale-95 border border-primary/50"
-              >
-                <Trophy className="w-6 h-6" />
-                Register Another Squad
-              </button>
+              <div className="pt-4 mt-8 border-t border-green-500/20 text-left w-full max-w-sm mx-auto">
+                <p className="text-[10px] text-green-500/60 font-mono uppercase mb-3 leading-tight">
+                  Note: Click only when you want to join any other squard
+                </p>
+                <button 
+                  onClick={handleRegisterAnother}
+                  className="w-full py-5 bg-primary hover:bg-primary/90 text-white font-black rounded-xl shadow-[0_0_30px_rgba(255,0,60,0.5)] transition-all flex items-center justify-center gap-3 text-lg tracking-widest uppercase active:scale-95 border border-primary/50"
+                >
+                  <Trophy className="w-6 h-6" />
+                  Register Another Squad
+                </button>
+              </div>
             </div>
           )}
 
