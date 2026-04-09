@@ -180,10 +180,3 @@ export function TournamentDetails() {
     </section>
   )
 }
-
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
