@@ -454,13 +454,6 @@ export function RegistrationSystem() {
                   Once admin verifies your payment, you will receive a WhatsApp confirmation. You can then register another squad.
                 </p>
               </div>
-              <button
-                onClick={handleRegisterAnother}
-                className="w-full py-4 bg-muted hover:bg-muted/80 text-white font-bold rounded-xl border border-muted-foreground/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mb-4 active:scale-95"
-              >
-                <Users className="w-5 h-5" />
-                Register Another Squad
-              </button>
             </>
           )}
 
